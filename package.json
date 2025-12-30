@@ -13,10 +13,12 @@
     "@tanstack/react-query": "^5.90.12",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.23.26",
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.562.0",
     "next": "16.1.1",
     "react": "19.2.3",
+    "react-countup": "^6.5.3",
     "react-dom": "19.2.3",
     "sqlite3": "^5.1.7",
     "tailwind-merge": "^3.4.0"

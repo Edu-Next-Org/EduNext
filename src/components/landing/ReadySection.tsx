@@ -5,8 +5,8 @@ import { Button } from "../ui/button";
 function ReadySection() {
   return (
     <Container>
-      <div className=" w-full border-t border-gray-600  ">
-        <div className="relative bottom-8">
+      <div className=" w-full border-t-2 border-[#bbbb] pb-6 ">
+        <div className="relative bottom-7 lg:bottom-9">
           <h2 className=" text-[18px] md:text-[28px] mx-auto font-bold  text-center p-3 h-[15%] rounded w-fit bg-[#eeee]">
             Ready to Level Up Your Career ?
           </h2>
@@ -16,10 +16,10 @@ function ReadySection() {
         </div>
 
         <div className="flex flex-col md:flex-row gap-4 items-center justify-center ">
-          <Button className="py-4 px-8 text-md font-bold ">
+          <Button className="py-6 px-8 text-md font-bold ">
             Get Started Now
           </Button>
-          <Button className="py-4 px-8 text-md font-bold  " variant="outline">
+          <Button className="py-6 px-8 text-md font-bold  " variant="outline">
             Free Trial
           </Button>
         </div>
