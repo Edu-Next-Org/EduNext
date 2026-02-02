@@ -1,6 +1,16 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/Utils/ReactQuery/QueryProvider";
+import { ThemeProvider } from "@/components/useThemes/provider";
+import ToastProvider from "@/Utils/Toast/ToastProvider";
+
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,9 +24,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className={inter.variable}>
         <QueryProvider>
-         {children}
+          <ThemeProvider>
+ {children}
+ <ToastProvider/>
+          </ThemeProvider>
+        
         </QueryProvider>
       </body>
     </html>
