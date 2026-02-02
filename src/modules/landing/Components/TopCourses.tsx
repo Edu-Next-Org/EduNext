@@ -19,7 +19,7 @@ function TopCourses() {
           <ChevronRight className=" w-4 h-4 lg:w-5 lg:h-6 text-gray-600" />
         </div>
       </div>
-      <div className="h-[80%] w-full flex md:flex-row flex-col gap-6 md:gap-0 justify-between mt-7 ">
+      <div className="h-[80%] w-full flex md:flex-row flex-col gap-5 justify-between mt-7 ">
         {Courses.map((_, index) => (
           <CourseCard classNames="lg:flex-1/3" key={index} />
         ))}
