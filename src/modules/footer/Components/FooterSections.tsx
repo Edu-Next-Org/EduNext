@@ -37,7 +37,7 @@ function FooterSections({ sections, copyright }: Tprops) {
     },
   };
   return (
-    <footer className=" mt-2  bg-[#ffff]  ">
+    <footer className=" bg-[#ffff] dark:bg-[#1e1e1e]  ">
       <div className="max-w-7xl mx-auto px-6 md:px-20  py-6">
         <motion.div
           variants={footerColumn}

@@ -2,12 +2,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import AuthNav from "./AuthNav";
 import { Links } from "../mock/Links";
+import { useTheme } from "@/components/useThemes/useThemes";
 
 function Navbar() {
+  const { toggleTheme } = useTheme();
   const pathName = usePathname();
   const [Open, setOpen] = useState<boolean>(false);
   const handleOpen: () => void = () => {
@@ -68,7 +70,7 @@ function Navbar() {
         animate="visible"
         transition={{ duration: 0.4, ease: "easeOut" }}
         className=" hidden lg:flex items-center lg:justify-between fixed top-0 left-0 w-full
-       z-50 gap-5 py-6 px-25 bg-[#eeee] shadow  "
+       z-50 gap-5 py-6 px-25 bg-[#eeee] shadow dark:bg-[#1e1e1e]  "
       >
         <motion.div
           variants={DesktopItemVariants}
@@ -76,6 +78,7 @@ function Navbar() {
         >
           <h1 className="text-2xl font-bold ">EduNext</h1>
         </motion.div>
+
         <div className="flex items-center justify-start gap-7 ">
           {Links.map((items, index) => (
             <motion.div variants={DesktopItemVariants} key={index}>
@@ -97,11 +100,27 @@ function Navbar() {
           </motion.div>
         </div>
       </motion.div>
-      <div className="w-full lg:hidden fixed z-50 top-0 px-6 py-6 bg-[#eeee] ">
+      <div className="w-full lg:hidden fixed z-50 top-0 px-6 py-6 bg-[#eeee] dark:bg-[#1e1e1e] ">
         <div className="flex justify-between items-center ">
           <h1 className="text-2xl font-bold ">EduNext</h1>
-          {Open ? <X onClick={handleOpen} /> : <Menu onClick={handleOpen} />}
+          <div className="flex gap-6 items-center">
+            <div
+              onClick={toggleTheme}
+              className="rounded-full  items-center justify-center cursor-pointer ml-5 flex lg:hidden"
+            >
+              <Sun
+                size={30}
+                className="text-orange-400 hidden dark:block transition-colors"
+              />
+              <Moon
+                size={30}
+                className="text-slate-700 block dark:hidden transition-colors hover:text-[#644DB3] transition-all duration-100"
+              />
+            </div>
+            {Open ? <X onClick={handleOpen} /> : <Menu onClick={handleOpen} />}
+          </div>
         </div>
+
         <AnimatePresence>
           {Open && (
             <>
@@ -109,6 +128,7 @@ function Navbar() {
                 onClick={() => setOpen(false)}
                 className="fixed inset-0 bg-[rgba(1,1,1,0.3)]  "
               ></div>
+
               <motion.div
                 variants={menuVariants}
                 initial="hidden"
@@ -117,9 +137,10 @@ function Navbar() {
                 className={`
     fixed top-18 right-0
     w-[43%] shadow rounded
-    bg-[#eeee]
+    bg-[#eeee] dark:bg-[#1e1e1e]
     flex flex-col gap-7
     px-6 h-[60%]
+    
     
   `}
               >

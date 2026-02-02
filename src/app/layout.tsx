@@ -5,7 +5,6 @@ import QueryProvider from "@/Utils/ReactQuery/QueryProvider";
 import { ThemeProvider } from "@/components/useThemes/provider";
 import ToastProvider from "@/Utils/Toast/ToastProvider";
 
-
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -27,10 +26,9 @@ export default function RootLayout({
       <body className={inter.variable}>
         <QueryProvider>
           <ThemeProvider>
- {children}
- <ToastProvider/>
+            {children}
+            <ToastProvider />
           </ThemeProvider>
-        
         </QueryProvider>
       </body>
     </html>

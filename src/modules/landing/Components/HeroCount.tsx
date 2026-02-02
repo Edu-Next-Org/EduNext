@@ -3,8 +3,8 @@ import CountUp from "react-countup";
 
 function HeroCount() {
   return (
-    <div className="flex lg:flex-row flex-col py-2  lg:px-10 justify-center lg:justify-between items-center">
-      <div className="flex gap-3 items-center ">
+    <div className="flex lg:flex-row flex-col py-2  lg:px-10 justify-center lg:justify-between items-center dark:bg-[#838383]">
+      <div className="flex gap-3 items-center  ">
         <h1 className=" text-[24px] lg:text-[32px] font-bold text-[#3d1dbf] ">
           <CountUp end={12} duration={4} />
           k+

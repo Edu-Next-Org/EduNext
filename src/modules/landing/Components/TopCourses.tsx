@@ -6,7 +6,7 @@ import CourseCard from "@/modules/Courses/views/CourseCard";
 function TopCourses() {
   const Courses: string[] = ["", "", ""];
   return (
-    <div className="w-full min-h-[500px] lg:px-20 px-6 pb-8  bg-[#eeee] ">
+    <div className="w-full min-h-[500px] lg:px-20 px-6 pb-8  bg-[#eeee] dark:bg-[#1e1e1e] ">
       <div className="w-full h-[20%] flex justify-between items-center border-b-2 border-[#bbbb] pb-1 ">
         <h1 className=" text-md lg:text-[26px] font-bold">Featured Courses</h1>
         <div className="flex gap-2 items-center">

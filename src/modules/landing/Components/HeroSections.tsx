@@ -15,7 +15,7 @@ function HeroSection() {
           priority
         />
         <div className="absolute inset-0 bg-black/40 -z-10"></div>
-        <div className="absolute inset-0 mt-6 lg:mt-25">
+        <div className="absolute inset-0 mt-6 lg:mt-25 text-black">
           <div className="grid lg:grid-cols-2 gap-12 items-center lg:px-25 px-6 py-8 ">
             <div className="w-[60%] lg:w-full">
               <h1 className="text-3xl lg:text-6xl font-bold mb-6">
@@ -43,7 +43,7 @@ function HeroSection() {
           </div>
         </div>
       </section>
-      <div className="lg:px-20 px-6 py-3  bg-[#eeee]">
+      <div className="lg:px-20 px-6 py-3  bg-[#eeee] dark:bg-[#1e1e1e]">
         <div className="mx-auto  bg-[#ffff] rounded shadow lg:w-[75%] relative bottom-10 ">
           <Layouts>
             <HeroCount />

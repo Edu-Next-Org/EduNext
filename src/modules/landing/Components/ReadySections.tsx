@@ -5,9 +5,9 @@ import React from "react";
 function ReadySection() {
   return (
     <Container>
-      <div className=" w-full border-t-2 border-[#bbbb] pb-6 ">
+      <div className=" w-full border-t-2 border-[#bbbb] pb-8 ">
         <div className="relative bottom-7 lg:bottom-9">
-          <h2 className=" text-[18px] md:text-[28px] mx-auto font-bold  text-center p-3 h-[15%] rounded w-fit bg-[#eeee]">
+          <h2 className=" text-[18px] md:text-[28px] mx-auto font-bold  text-center p-3 h-[15%] rounded w-fit bg-[#eeee] dark:bg-[#1e1e1e]">
             Ready to Level Up Your Career ?
           </h2>
           <h3 className=" text-[15px] md:text-[21px]  text-center ">
