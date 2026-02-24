@@ -100,7 +100,7 @@ function Navbar() {
             </motion.div>
           ))}
           <motion.div variants={DesktopItemVariants}>
-            {token ? <User /> : <AuthNav />}
+            <AuthNav />
           </motion.div>
         </div>
       </motion.div>

@@ -1,8 +1,54 @@
-export async function GetAllCourses() {
+import { ICourseParams } from "./../../../../app/(main)/courses/page";
+import { BaseUrl } from "@/Utils/URL";
+
+export interface ICourseResult {
+  success: boolean;
+  data: ICourseData[];
+  meta: ICourseMeta;
+}
+
+export interface ICourseData {
+  _id: string;
+  courseVideo: string;
+  title: string;
+  description: string;
+  categories: Category[];
+  courseLevel: CourseLevel;
+  teacherName: string;
+  courseImage: string;
+  teacherImage: string;
+  rating: number;
+  price: number;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  isFavorite: boolean;
+}
+
+export interface Category {
+  _id: string;
+  name: string;
+}
+
+export interface CourseLevel {
+  _id: string;
+  name: string;
+}
+
+export interface ICourseMeta {
+  total: number;
+  page: number;
+  pages: number;
+  limit: number;
+}
+
+export async function GetAllCourses(params?: ICourseParams) {
   try {
-
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/courses`, {
+    const queryString = params
+      ? `?${new URLSearchParams(params as Record<string, string>)}`
+      : "";
+    const res = await fetch(`${BaseUrl}/courses${queryString}`, {
       cache: "no-store",
     });
 
@@ -10,12 +56,19 @@ export async function GetAllCourses() {
       throw new Error(`Status: ${res.status}`);
     }
 
-    
-
-    const result = await res.json();
-    return result.data;
+    const result: ICourseResult = await res.json();
+    return result;
   } catch (error) {
     console.error("Fetch Error:", error);
-    return [];
+    return {
+      success: false,
+      data: [],
+      meta: {
+        total: 0,
+        page: 1,
+        pages: 1,
+        limit: 0,
+      },
+    };
   }
 }

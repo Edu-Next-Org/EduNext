@@ -2,12 +2,16 @@ import React from "react";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import CourseCard from "@/modules/Courses/views/CourseCard";
-import { GetAllCourses } from "@/core/services/api/Get/GetAllCourses";
+import {
+  GetAllCourses,
+  ICourseData,
+  ICourseResult,
+} from "@/core/services/api/Get/GetAllCourses";
 import { ICourses } from "@/modules/Courses/types/CoursesTP";
 
 async function TopCourses() {
-  const Courses: ICourses[] = await GetAllCourses();
-  console.log(Courses);
+  const Courses: ICourseResult = await GetAllCourses();
+  const courseData: ICourseData[] = Courses?.data || [];
 
   return (
     <div className="w-full min-h-[500px] lg:px-20 px-6 pb-8  bg-[#eeee] dark:bg-[#1e1e1e] ">
@@ -24,7 +28,7 @@ async function TopCourses() {
         </div>
       </div>
       <div className="h-[80%] w-full flex md:flex-row flex-col gap-5 justify-between mt-7 ">
-        {Courses.slice(0, 4).map((items, index) => (
+        {courseData.slice(0, 4).map((items, index) => (
           <CourseCard course={items} classNames="lg:flex-1/3" key={index} />
         ))}
       </div>

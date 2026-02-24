@@ -1,8 +1,31 @@
 import Courses from "@/modules/Courses/views/Courses";
-import React from "react";
 
-function CoursesPage() {
-  return <Courses />;
+interface EventPageProps {
+  searchParams: Promise<{
+    search?: string;
+    page?: string;
+    limit?: string;
+    courseLevel?: string;
+    categories?: string;
+    price?: string;
+    sort?: string;
+  }>;
 }
+export interface ICourseParams {
+  search?: string;
+  page?: string;
+  limit?: string;
+  courseLevel?: string;
+  categories?: string;
+  price?: string;
+  sort?: string;
+}
+export default async function CoursesPage({ searchParams }: EventPageProps) {
+  const params: ICourseParams = await searchParams;
 
-export default CoursesPage;
+  return (
+    <>
+      <Courses params={params} />
+    </>
+  );
+}

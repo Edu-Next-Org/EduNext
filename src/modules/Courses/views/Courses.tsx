@@ -3,8 +3,9 @@ import React from "react";
 import SearchCourse from "../components/Search";
 import SideFilters from "../components/side/SideFilters";
 import MainCourses from "../components/main/MainCourses";
+import { ICourseParams } from "@/app/(main)/courses/page";
 
-function Courses() {
+function Courses({ params }: { params: ICourseParams }) {
   return (
     <div>
       <div className="border-b border-[#bbbb] ">
@@ -27,7 +28,7 @@ function Courses() {
               <SideFilters />
             </div>
             <div className=" w-full lg:w-[73%] ">
-              <MainCourses />
+              <MainCourses params={params} />
             </div>
           </div>
         </Container>

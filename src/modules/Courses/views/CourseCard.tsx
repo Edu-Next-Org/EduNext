@@ -10,9 +10,11 @@ import Image from "next/image";
 import StarsRate from "../components/Stars";
 import { ICourses } from "../types/CoursesTP";
 import { formatDateEN } from "@/Utils/helper/DateConverter";
+import { ICourseData } from "@/core/services/api/Get/GetAllCourses";
+import Link from "next/link";
 
 type props = {
-  course: ICourses;
+  course: ICourseData;
   classNames: string;
 };
 export default function CourseCard({ course, classNames }: props) {
@@ -28,7 +30,7 @@ export default function CourseCard({ course, classNames }: props) {
           className="object-cover"
         />
         <div className="absolute top-2 left-3 py-1 px-2 text-white bg-black/30 backdrop-blur-sm shadow-md rounded ">
-          {course.category}
+          {course.categories.join(",")}
         </div>
       </div>
       <CardContent className=" mt-2 pb-1 ">
@@ -48,10 +50,13 @@ export default function CourseCard({ course, classNames }: props) {
       </CardContent>
 
       <CardFooter>
-        <div className="flex justify-between items-center w-full border-t border-[#bbbb] py-3 ">
+        <Link
+          href={`/courses/${course._id}`}
+          className="flex justify-between items-center w-full border-t border-[#bbbb] py-3 "
+        >
           <Button>Learn More</Button>
           <ChevronRight />
-        </div>
+        </Link>
       </CardFooter>
     </Card>
   );
