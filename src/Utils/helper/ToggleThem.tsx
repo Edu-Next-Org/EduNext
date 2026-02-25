@@ -8,7 +8,7 @@ const ToggleThem = () => {
   return (
     <div
       onClick={toggleTheme}
-      className="rounded-full  cursor-pointer pl-4 slideUp "
+      className="rounded-full  cursor-pointer slideUp "
     >
       <Sun
         size={30}

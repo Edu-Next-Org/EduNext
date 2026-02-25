@@ -7,27 +7,35 @@ import DashboardContainer from "@/components/container/DashboardContainer";
 import { motion, easeIn, Variants } from "framer-motion";
 function VerticalNav() {
   const sideBarVariants: Variants = {
-    hidden: { x: -80, opacity: 0 },
+    hidden: {
+      x: -100,
+      opacity: 0,
+      filter: "blur(8px)",
+    },
     visible: {
       x: 0,
       opacity: 1,
+      filter: "blur(0px)",
       transition: {
-        type: "spring",
-        stiffness: 120,
-        damping: 20,
-        staggerChildren: 0.15,
-        delayChildren: 0.2,
+        duration: 0.6,
+        ease: [0.22, 1, 0.36, 1],
+        staggerChildren: 0.12,
+        delayChildren: 0.15,
       },
     },
   };
   const itemVariants: Variants = {
-    hidden: { x: -40, opacity: 0 },
+    hidden: {
+      x: -50,
+      opacity: 0,
+    },
     visible: {
       x: 0,
       opacity: 1,
       transition: {
+        duration: 0.4,
         type: "spring",
-        stiffness: 200,
+        stiffness: 250,
       },
     },
   };
