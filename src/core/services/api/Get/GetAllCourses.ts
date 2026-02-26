@@ -52,6 +52,8 @@ export async function GetAllCourses(params?: ICourseParams) {
       cache: "no-store",
     });
 
+    
+
     if (!res.ok) {
       throw new Error(`Status: ${res.status}`);
     }
