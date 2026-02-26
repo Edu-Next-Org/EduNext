@@ -11,7 +11,7 @@ import AddComment from "@/modules/CourseDetails/AddComment";
 import {
   GetCourseByID,
   CourseDetailData,
-} from "@/core/services/api/get/GetCourseByID";
+} from "@/core/services/api/Get/GetCourseByID";
 import ReviewSection from "@/modules/CourseDetails/ReviewSection";
 
 interface SyllabusItem {

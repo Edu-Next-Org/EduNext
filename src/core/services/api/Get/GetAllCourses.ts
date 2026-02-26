@@ -54,6 +54,8 @@ export async function GetAllCourses(
       cache: "no-store",
     });
 
+    
+
     if (!res.ok) {
       throw new Error(`Status: ${res.status}`);
     }
