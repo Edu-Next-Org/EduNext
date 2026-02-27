@@ -1,3 +1,4 @@
+import { buttonVariants } from '@/components/ui/button';
 export type SyllabusItem = {
   id: number;
   instructor: string;
@@ -28,11 +29,18 @@ export type CourseDetailData = {
   courseVideo?: string;
   syllabus?: SyllabusItem[];
   reviews?: Review[];
+  isFavorite?: boolean;
 };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 
 export async function GetCourseByID(id: string): Promise<CourseDetailData> {
+
+   const isServer = typeof window === "undefined";
+
+    const API_BASE = isServer 
+    ? "https://edunext-api.onrender.com/api" 
+    : "/api"; 
 
   const url = `${API_BASE}/courses/${id}`;
   

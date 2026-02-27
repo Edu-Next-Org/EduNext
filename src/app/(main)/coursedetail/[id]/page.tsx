@@ -223,6 +223,8 @@ export default async function CoursePage({
                 price={course.price}
                 teacherName={course.teacherName}
                 teacherImage={course.teacherImage}
+                initialIsFavorite={course.isFavorite || false}
+                courseId={id}
               />
               <div className="bg-white rounded-[2.5rem] p-5 shadow-sm border border-gray-100 dark:bg-[#333] dark:border-none">
                 <h3 className="text-xl font-bold mb-5 px-1 dark:text-[white] ">

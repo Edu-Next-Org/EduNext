@@ -24,6 +24,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+    async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "https://edunext-api.onrender.com/api/:path*",
+      },
+    ];
+  },
 };
+
+
 
 export default nextConfig;

@@ -1,28 +1,43 @@
-import { BaseUrl } from "@/Utils/URL";
+// import { BaseUrl } from "@/Utils/URL";
 
-export interface ICategoriesResponse {
-  success: boolean;
-  data: ICategoriesData[];
-}
-export interface ICategoriesData {
-  _id: string;
-  name: string;
-  description: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
+// export interface ICategoriesResponse {
+//   success: boolean;
+//   data: ICategoriesData[];
+// }
+// export interface ICategoriesData {
+//   _id: string;
+//   name: string;
+//   description: string;
+//   createdAt: string;
+//   updatedAt: string;
+//   __v: number;
+// }
+
+// export const GetAllCategories = async (): Promise<ICategoriesResponse> => {
+//   const res = await fetch(`${BaseUrl}/categories`, {
+//     next: {
+//       revalidate: 60,
+//     },
+//   });
+//   if (!res.ok) {
+//     throw new Error("faild to fetch categories");
+//   }
+//   const data = await res.json();
+//   console.log("categories : ", data);
+//   return data;
+// };
+export interface ICategoriesResponse { success: boolean; data: ICategoriesData[]; }
+export interface ICategoriesData { _id: string; name: string; description: string; createdAt: string; updatedAt: string; __v: number; }
 
 export const GetAllCategories = async (): Promise<ICategoriesResponse> => {
-  const res = await fetch(`${BaseUrl}/categories`, {
-    next: {
-      revalidate: 60,
-    },
+  const isServer = typeof window === "undefined";
+  const API_BASE = isServer ? "https://edunext-api.onrender.com/api" : "/api";
+
+  const res = await fetch(`${API_BASE}/categories`, {
+    next: { revalidate: 60 },
   });
-  if (!res.ok) {
-    throw new Error("faild to fetch categories");
-  }
+  
+  if (!res.ok) throw new Error("failed to fetch categories");
   const data = await res.json();
-  console.log("categories : ", data);
   return data;
 };

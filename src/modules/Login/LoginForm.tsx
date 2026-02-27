@@ -6,22 +6,31 @@ import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { motion, Variants } from "framer-motion";
-import { 
-  Mail, House, Lock, Facebook, Github, Linkedin, 
-  EyeOff, Eye, Sun, Moon, Loader2 
+import {
+  Mail,
+  House,
+  Lock,
+  Facebook,
+  Github,
+  Linkedin,
+  EyeOff,
+  Eye,
+  Sun,
+  Moon,
+  Loader2,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/useThemes/useThemes";
 
-
-
-import { loginUser, LoginPayload, LoginResponse } from "@/core/services/api/post/Login"; 
-import { setItem } from "@/Utils/helper/storage.services";
+import {
+  loginUser,
+  LoginPayload,
+  LoginResponse,
+} from "@/core/services/api/post/Login";
 import { toast } from "react-toastify";
-
 
 interface ErrorResponse {
   message: string;
@@ -58,32 +67,27 @@ export default function LoginForm() {
   const { toggleTheme } = useTheme();
   const router = useRouter();
 
-
-  const mutation = useMutation<LoginResponse, AxiosError<ErrorResponse>, LoginPayload>({
+  const mutation = useMutation<
+    LoginResponse,
+    AxiosError<ErrorResponse>,
+    LoginPayload
+  >({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      toast.success("Welcome")
       if (data.success) {
-       
-        setItem("accessToken", data.data.accessToken);
-        setItem("refreshToken", data.data.refreshToken);
-        setItem("user", data.data.user);
+        toast.success("Welcome");
 
-   
         router.push("/");
       }
     },
     onError: () => {
-      toast.error("Error")
-    
-     
-     
+      toast.error("Error: Invalid credentials");
     },
   });
 
   const handleSubmit = (
     values: LoginPayload,
-    { setSubmitting }: FormikHelpers<LoginPayload>
+    { setSubmitting }: FormikHelpers<LoginPayload>,
   ) => {
     mutation.mutate(values, {
       onSettled: () => {
@@ -101,7 +105,10 @@ export default function LoginForm() {
       w-[95%] h-auto px-5 py-8 my-5 
       md:w-[70%] md:h-[75%] md:px-15 md:py-0 md:my-0 dark:bg-[#333] dark:shadow-[0_0_20px_4px_#644DB3]"
     >
-      <motion.div variants={itemVariants} className="flex justify-between pt-2 md:pt-7 mb-6 md:mb-0">
+      <motion.div
+        variants={itemVariants}
+        className="flex justify-between pt-2 md:pt-7 mb-6 md:mb-0"
+      >
         <p className="text-[black] font-bold text-[22px] md:text-[25px] dark:text-[white]">
           Sign in to EduNext
         </p>
@@ -124,7 +131,6 @@ export default function LoginForm() {
         </div>
       </motion.div>
 
- 
       <Formik<LoginPayload>
         initialValues={{ email: "", password: "" }}
         validationSchema={LoginSchema}
@@ -132,8 +138,10 @@ export default function LoginForm() {
       >
         {({ errors, touched }) => (
           <Form className="w-full relative mt-2 md:mt-5">
-      
-            <motion.div variants={itemVariants} className="w-full relative mb-6">
+            <motion.div
+              variants={itemVariants}
+              className="w-full relative mb-6"
+            >
               <Mail
                 className="absolute top-2.5 left-4"
                 size={22}
@@ -141,8 +149,8 @@ export default function LoginForm() {
                   errors.email && touched.email
                     ? "#ef4444c7"
                     : !errors.email && touched.email
-                    ? "#22c55e"
-                    : "#b1b1b1ff"
+                      ? "#22c55e"
+                      : "#b1b1b1ff"
                 }
               />
               <Field
@@ -153,8 +161,8 @@ export default function LoginForm() {
                   errors.email && touched.email
                     ? "border-red-500 text-[#ff0000]"
                     : !errors.email && touched.email
-                    ? "border-green-500"
-                    : "border-[#ccc]"
+                      ? "border-green-500"
+                      : "border-[#ccc]"
                 }`}
               />
               <ErrorMessage
@@ -164,8 +172,10 @@ export default function LoginForm() {
               />
             </motion.div>
 
-      
-            <motion.div variants={itemVariants} className="w-full relative mb-6">
+            <motion.div
+              variants={itemVariants}
+              className="w-full relative mb-6"
+            >
               <Lock
                 className="absolute top-2.5 left-4"
                 size={22}
@@ -173,8 +183,8 @@ export default function LoginForm() {
                   errors.password && touched.password
                     ? "#ef4444c7"
                     : !errors.password && touched.password
-                    ? "#22c55e"
-                    : "#b1b1b1ff"
+                      ? "#22c55e"
+                      : "#b1b1b1ff"
                 }
               />
               <Field
@@ -185,8 +195,8 @@ export default function LoginForm() {
                   errors.password && touched.password
                     ? "border-red-500 text-[#ff0000]"
                     : !errors.password && touched.password
-                    ? "border-green-500"
-                    : "border-[#ccc]"
+                      ? "border-green-500"
+                      : "border-[#ccc]"
                 }`}
               />
               <div
@@ -206,7 +216,6 @@ export default function LoginForm() {
               />
             </motion.div>
 
-        
             <motion.div variants={itemVariants}>
               <Button
                 type="submit"
