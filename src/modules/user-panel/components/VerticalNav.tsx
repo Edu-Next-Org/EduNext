@@ -45,7 +45,7 @@ function VerticalNav() {
       variants={sideBarVariants}
       initial="hidden"
       animate="visible"
-      className="w-full shadow dark:bg-[#1e1e1e] dark:shadow-[0_0_20px_4px_#644DB3] bg-[#ffff] h-full flex flex-col pr-4 rounded-md "
+      className="w-full shadow dark:bg-[#1e1e1e] dark:shadow-[0_0_15px_rgba(100,77,179,0.25)] bg-[#ffff] h-full flex flex-col pr-4 rounded-md "
     >
       <motion.h1
         variants={itemVariants}
