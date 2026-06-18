@@ -25,8 +25,7 @@ import { useTheme } from "@/components/useThemes/useThemes";
 
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 import {
   registerUser,
@@ -79,37 +78,26 @@ interface RegisterFormValues {
   confirmPassword: string;
 }
 
-interface ErrorResponse {
-  message: string;
-}
-
 export default function RegisterForm() {
   const [showPassword2, setShowPassword2] = useState(false);
   const [showPassword3, setShowPassword3] = useState(false);
   const { theme, toggleTheme } = useTheme();
-  const isDark = theme === "dark";
   const router = useRouter();
 
- 
-  const mutation = useMutation<
-    RegisterResponse,
-    AxiosError<ErrorResponse>,
-    RegisterPayload
-  >({
+  const mutation = useMutation<RegisterResponse, Error, RegisterPayload>({
     mutationFn: registerUser,
     onSuccess: () => {
       toast.success("Account created successfully");
       router.push("/login");
     },
-    onError: () => {
-    
-      toast.error("Registration failed");
+    onError: (error: Error) => {
+      toast.error(error.message || "Registration failed");
     },
   });
 
   const handleSubmit = (
     values: RegisterFormValues,
-    { setSubmitting }: FormikHelpers<RegisterFormValues>
+    { setSubmitting }: FormikHelpers<RegisterFormValues>,
   ) => {
     const payload: RegisterPayload = {
       name: values.fullName,
@@ -139,7 +127,10 @@ export default function RegisterForm() {
       dark:shadow-[0_0_20px_4px_#644DB3]
       "
     >
-      <motion.div variants={itemVariants} className="flex justify-between pt-2 md:pt-7 mb-6 md:mb-0">
+      <motion.div
+        variants={itemVariants}
+        className="flex justify-between pt-2 md:pt-7 mb-6 md:mb-0"
+      >
         <p className="text-[black] font-bold text-[20px] md:text-[25px] dark:text-[white] ">
           Create your account
         </p>
@@ -161,7 +152,7 @@ export default function RegisterForm() {
             className="text-slate-700 block dark:hidden transition-colors hover:text-[#644DB3] transition-all duration-100"
           />
         </div>
-        </motion.div>
+      </motion.div>
 
       <Formik
         initialValues={{
@@ -175,7 +166,10 @@ export default function RegisterForm() {
       >
         {({ errors, touched }) => (
           <Form className="w-full relative mt-2 md:mt-5">
-            <motion.div variants={itemVariants} className="w-full relative mb-6  ">
+            <motion.div
+              variants={itemVariants}
+              className="w-full relative mb-6  "
+            >
               <User
                 className="absolute top-2.5 left-4"
                 size={22}
@@ -183,8 +177,8 @@ export default function RegisterForm() {
                   errors.fullName && touched.fullName
                     ? "#ef4444c7"
                     : !errors.fullName && touched.fullName
-                    ? "#22c55e"
-                    : "#b1b1b1ff"
+                      ? "#22c55e"
+                      : "#b1b1b1ff"
                 }
               />
 
@@ -196,8 +190,8 @@ export default function RegisterForm() {
                   errors.fullName && touched.fullName
                     ? "border-red-500 text-[#ff0000]"
                     : !errors.fullName && touched.fullName
-                    ? "border-green-500"
-                    : "border-[#ccc]"
+                      ? "border-green-500"
+                      : "border-[#ccc]"
                 }`}
               />
 
@@ -208,7 +202,10 @@ export default function RegisterForm() {
               />
             </motion.div>
 
-            <motion.div variants={itemVariants} className="w-full relative mb-6">
+            <motion.div
+              variants={itemVariants}
+              className="w-full relative mb-6"
+            >
               <Mail
                 className="absolute top-2.5 left-4"
                 size={22}
@@ -216,8 +213,8 @@ export default function RegisterForm() {
                   errors.email && touched.email
                     ? "#ef4444c7"
                     : !errors.email && touched.email
-                    ? "#22c55e"
-                    : "#b1b1b1ff"
+                      ? "#22c55e"
+                      : "#b1b1b1ff"
                 }
               />
 
@@ -229,8 +226,8 @@ export default function RegisterForm() {
                   errors.email && touched.email
                     ? "border-red-500 text-[#ff0000]"
                     : !errors.email && touched.email
-                    ? "border-green-500"
-                    : "border-[#ccc]"
+                      ? "border-green-500"
+                      : "border-[#ccc]"
                 }`}
               />
 
@@ -241,7 +238,10 @@ export default function RegisterForm() {
               />
             </motion.div>
 
-            <motion.div variants={itemVariants} className="w-full relative mb-6">
+            <motion.div
+              variants={itemVariants}
+              className="w-full relative mb-6"
+            >
               <Lock
                 className="absolute top-2.5 left-4"
                 size={22}
@@ -249,8 +249,8 @@ export default function RegisterForm() {
                   errors.password && touched.password
                     ? "#ef4444c7"
                     : !errors.password && touched.password
-                    ? "#22c55e"
-                    : "#b1b1b1ff"
+                      ? "#22c55e"
+                      : "#b1b1b1ff"
                 }
               />
 
@@ -262,8 +262,8 @@ export default function RegisterForm() {
                   errors.password && touched.password
                     ? "border-red-500 text-[#ff0000]"
                     : !errors.password && touched.password
-                    ? "border-green-500"
-                    : "border-[#ccc]"
+                      ? "border-green-500"
+                      : "border-[#ccc]"
                 }`}
               />
 
@@ -277,8 +277,9 @@ export default function RegisterForm() {
                     color={
                       errors.password && touched.password
                         ? "#ef4444c7"
-                        : !errors.password && touched.password ? "#22c55e"
-                        : "#b1b1b1ff"
+                        : !errors.password && touched.password
+                          ? "#22c55e"
+                          : "#b1b1b1ff"
                     }
                   />
                 ) : (
@@ -288,8 +289,8 @@ export default function RegisterForm() {
                       errors.password && touched.password
                         ? "#ef4444c7"
                         : !errors.password && touched.password
-                        ? "#22c55e"
-                        : "#b1b1b1ff"
+                          ? "#22c55e"
+                          : "#b1b1b1ff"
                     }
                   />
                 )}
@@ -302,7 +303,10 @@ export default function RegisterForm() {
               />
             </motion.div>
 
-            <motion.div variants={itemVariants} className="w-full relative mb-6">
+            <motion.div
+              variants={itemVariants}
+              className="w-full relative mb-6"
+            >
               <Lock
                 className="absolute top-2.5 left-4"
                 size={22}
@@ -310,8 +314,8 @@ export default function RegisterForm() {
                   errors.confirmPassword && touched.confirmPassword
                     ? "#ef4444c7"
                     : !errors.confirmPassword && touched.confirmPassword
-                    ? "#22c55e"
-                    : "#b1b1b1ff"
+                      ? "#22c55e"
+                      : "#b1b1b1ff"
                 }
               />
 
@@ -323,8 +327,8 @@ export default function RegisterForm() {
                   errors.confirmPassword && touched.confirmPassword
                     ? "border-red-500 text-[#ff0000]"
                     : !errors.confirmPassword && touched.confirmPassword
-                    ? "border-green-500"
-                    : "border-[#ccc]"
+                      ? "border-green-500"
+                      : "border-[#ccc]"
                 }`}
               />
 
@@ -339,8 +343,8 @@ export default function RegisterForm() {
                       errors.confirmPassword && touched.confirmPassword
                         ? "#ef4444c7"
                         : !errors.confirmPassword && touched.confirmPassword
-                        ? "#22c55e"
-                        : "#b1b1b1ff"
+                          ? "#22c55e"
+                          : "#b1b1b1ff"
                     }
                   />
                 ) : (
@@ -350,8 +354,8 @@ export default function RegisterForm() {
                       errors.confirmPassword && touched.confirmPassword
                         ? "#ef4444c7"
                         : !errors.confirmPassword && touched.confirmPassword
-                        ? "#22c55e"
-                        : "#b1b1b1ff"
+                          ? "#22c55e"
+                          : "#b1b1b1ff"
                     }
                   />
                 )}
@@ -376,17 +380,20 @@ export default function RegisterForm() {
               transition-colors duration-200"
                 disabled={mutation.isPending}
               >
-               {mutation.isPending ? (
+                {mutation.isPending ? (
                   <>
                     <Loader2 className="animate-spin" /> Signing Up...
                   </>
                 ) : (
-                  "Sign In"
+                  "Sign Up"
                 )}
               </Button>
             </motion.div>
 
-            <motion.div variants={itemVariants} className="flex items-center mt-1 mb-8">
+            <motion.div
+              variants={itemVariants}
+              className="flex items-center mt-1 mb-8"
+            >
               <span className="flex-grow border-t border-[#ccc]" />
               <span className="mx-4 text-sm text-[#898989]">
                 or continue with
@@ -394,7 +401,10 @@ export default function RegisterForm() {
               <span className="flex-grow border-t border-[#ccc]" />
             </motion.div>
 
-            <motion.ul variants={itemVariants} className="flex items-center justify-between mt-4">
+            <motion.ul
+              variants={itemVariants}
+              className="flex items-center justify-between mt-4"
+            >
               <li className="cursor-pointer bg-[#000] p-3 w-[31.3%] hover:scale-[1.06] transition-all duration-200 rounded-sm shadow-lg flex items-center justify-center">
                 <Github size={28} color="white" />
               </li>
@@ -408,7 +418,10 @@ export default function RegisterForm() {
               </li>
             </motion.ul>
 
-            <motion.p variants={itemVariants} className="text-center text-[#898989] mt-6 pb-4 md:pb-0">
+            <motion.p
+              variants={itemVariants}
+              className="text-center text-[#898989] mt-6 pb-4 md:pb-0"
+            >
               Already have an account?{" "}
               <Link
                 href="/login"

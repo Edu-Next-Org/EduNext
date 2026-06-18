@@ -5,8 +5,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogOverlay,
-  DialogPortal,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
@@ -15,7 +13,7 @@ import {
   DeleteProfileImage,
   IDeleteImgRes,
 } from "@/core/services/api/delete/DeleteProfileImage";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 interface IDeleteImageModalProps {
   open: boolean;

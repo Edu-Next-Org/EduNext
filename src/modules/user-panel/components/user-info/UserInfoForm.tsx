@@ -17,7 +17,7 @@ import {
   User,
 } from "lucide-react";
 import { ChangeEvent, useActionState, useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 const UserInfoForm = ({ userInfo }: { userInfo: IUser | null }) => {
   const [image, setImage] = useState<string>(

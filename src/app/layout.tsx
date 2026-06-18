@@ -3,8 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/Utils/ReactQuery/QueryProvider";
 import { ThemeProvider } from "@/components/useThemes/provider";
-import ToastProvider from "@/Utils/Toast/ToastProvider";
+import { Toaster } from "@/components/ui/sonner";
 import AuthProvider from "@/components/authProvider/AuthProvider";
+import { ScrollToTop } from "@/components/scrollToTop";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,8 +29,8 @@ export default function RootLayout({
         <QueryProvider>
           <ThemeProvider>
             <AuthProvider>{children}</AuthProvider>
-
-            <ToastProvider />
+            <ScrollToTop />
+            <Toaster position="top-center" />
           </ThemeProvider>
         </QueryProvider>
       </body>

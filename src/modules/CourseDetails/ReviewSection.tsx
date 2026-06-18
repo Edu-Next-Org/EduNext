@@ -1,21 +1,45 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import ReplyButton from "@/modules/CourseDetails/ReplyButton";
+import ReplySection from "@/modules/CourseDetails/ReplySection";
 import { useQuery } from "@tanstack/react-query";
-import { getCourseComments } from "@/core/services/api/get/getCourseComments";
+import { getCourseComments } from "@/core/services/api/Get/getCourseComments";
+import Empty from "@/assets/Lottie/Empty.json";
+import Lottie from "lottie-react";
 
 interface ReviewSectionProps {
   courseId: string;
   isChild?: boolean;
 }
 
+const DEFAULT_AVATAR = "/images/people.png";
+
+interface CommentAvatarProps {
+  name: string;
+  profileImage: string | null;
+}
+
+function CommentAvatar({ name, profileImage }: CommentAvatarProps) {
+  const [src, setSrc] = useState<string>(profileImage ?? DEFAULT_AVATAR);
+
+  return (
+    <Image
+      src={src}
+      alt={name}
+      width={64}
+      height={64}
+      className="rounded-full object-cover mb-3 dark:bg-[#ccc]"
+      onError={() => setSrc(DEFAULT_AVATAR)}
+    />
+  );
+}
+
 export default function ReviewSection({
   courseId,
   isChild = false,
 }: ReviewSectionProps) {
-  const { data: comments, isLoading } = useQuery({
+  const { data: comments = [], isLoading } = useQuery({
     queryKey: ["comments", courseId],
     queryFn: () => getCourseComments(courseId),
     enabled: !!courseId,
@@ -28,10 +52,13 @@ export default function ReviewSection({
       </div>
     );
 
-  if (!comments || comments.length === 0) {
+  if (comments.length === 0) {
     return !isChild ? (
-      <div className="mt-10 dark:text-gray-400">
-        No reviews yet. Be the first to comment!
+      <div className="flex flex-col items-center justify-center gap-10 pt-5 pb-10 text-slate-500 dark:text-[#aaa]">
+        <Lottie animationData={Empty} style={{ width: 200, height: 200 }} />
+        <p className="mt-10 dark:text-gray-400">
+          No reviews yet. Be the first to comment!
+        </p>
       </div>
     ) : null;
   }
@@ -52,12 +79,9 @@ export default function ReviewSection({
         {comments.map((comment) => (
           <div key={comment._id} className="flex flex-col">
             <div className="bg-white dark:bg-[#333] p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
-              <Image
-                src={"https://i.pravatar.cc/150"}
-                alt="User"
-                width={64}
-                height={64}
-                className="rounded-full object-cover mb-3"
+              <CommentAvatar
+                name={comment.user.name ?? "Student"}
+                profileImage={comment.user.profileImage}
               />
               <div className="flex gap-1 text-[#898989] text-xs mb-2">
                 {new Date(comment.createdAt).toLocaleDateString("en-US", {
@@ -84,7 +108,7 @@ export default function ReviewSection({
                       {comment.content.slice(0, 25)}...{" "}
                       <label
                         htmlFor={`toggle-${comment._id}`}
-                        className="underline cursor-pointer text-purple-400 "
+                        className="underline cursor-pointer text-purple-400"
                       >
                         More
                       </label>
@@ -102,7 +126,7 @@ export default function ReviewSection({
                 )}
               </p>
 
-              <ReplyButton />
+              <ReplySection commentId={comment._id} courseId={courseId} />
             </div>
           </div>
         ))}

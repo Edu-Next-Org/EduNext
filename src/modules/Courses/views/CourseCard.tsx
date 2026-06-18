@@ -1,14 +1,8 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { ChevronRight, Star } from "lucide-react";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import StarsRate from "../components/Stars";
-import { ICourses } from "../types/CoursesTP";
 import { formatDateEN } from "@/Utils/helper/DateConverter";
 import { ICourseData } from "@/core/services/api/Get/GetAllCourses";
 import Link from "next/link";
@@ -51,7 +45,7 @@ export default function CourseCard({ course, classNames }: props) {
 
       <CardFooter>
         <Link
-          href={`/courses/${course._id}`}
+          href={`/coursedetail/${course._id}`}
           className="flex justify-between items-center w-full border-t border-[#bbbb] py-3 "
         >
           <Button>Learn More</Button>

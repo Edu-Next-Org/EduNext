@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
-import { AxiosError } from "axios";
 import { motion, Variants } from "framer-motion";
 import {
   Mail,
@@ -24,17 +23,13 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/useThemes/useThemes";
+import { toast } from "sonner";
 
 import {
   loginUser,
   LoginPayload,
   LoginResponse,
 } from "@/core/services/api/post/Login";
-import { toast } from "react-toastify";
-
-interface ErrorResponse {
-  message: string;
-}
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -63,25 +58,20 @@ const LoginSchema = Yup.object().shape({
 });
 
 export default function LoginForm() {
-  const [showPassword2, setShowPassword2] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { toggleTheme } = useTheme();
   const router = useRouter();
 
-  const mutation = useMutation<
-    LoginResponse,
-    AxiosError<ErrorResponse>,
-    LoginPayload
-  >({
+  const mutation = useMutation<LoginResponse, Error, LoginPayload>({
     mutationFn: loginUser,
     onSuccess: (data) => {
       if (data.success) {
-        toast.success("Welcome");
-
+        toast.success("Welcome back!");
         router.push("/");
       }
     },
-    onError: () => {
-      toast.error("Error: Invalid credentials");
+    onError: (error) => {
+      toast.error(error.message || "Error: Invalid credentials");
     },
   });
 
@@ -101,9 +91,7 @@ export default function LoginForm() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="bg-[white] shadow-[0_0_12px_4px_#ccc] rounded-2xl
-      w-[95%] h-auto px-5 py-8 my-5 
-      md:w-[70%] md:h-[75%] md:px-15 md:py-0 md:my-0 dark:bg-[#333] dark:shadow-[0_0_20px_4px_#644DB3]"
+      className="bg-[white] shadow-[0_0_12px_4px_#ccc] rounded-2xl w-[95%] h-auto px-5 py-8 my-5 md:w-[70%] md:h-[75%] md:px-15 md:py-0 md:my-0 dark:bg-[#333] dark:shadow-[0_0_20px_4px_#644DB3]"
     >
       <motion.div
         variants={itemVariants}
@@ -126,7 +114,7 @@ export default function LoginForm() {
           />
           <Moon
             size={30}
-            className="text-slate-700 block dark:hidden transition-colors hover:text-[#644DB3] transition-all duration-100"
+            className="text-slate-700 block dark:hidden hover:text-[#644DB3] transition-all duration-100"
           />
         </div>
       </motion.div>
@@ -157,12 +145,12 @@ export default function LoginForm() {
                 name="email"
                 type="email"
                 placeholder="Enter your email"
-                className={`border w-full py-2 rounded-md outline-none pl-12 pr-4 md:px-13 dark:bg-transparent dark:text-white ${
+                className={`border w-full py-2 rounded-md outline-none pl-12 pr-4 md:px-13 dark:bg-transparent dark:text-white transition-colors ${
                   errors.email && touched.email
-                    ? "border-red-500 text-[#ff0000]"
+                    ? "border-red-500 text-red-500"
                     : !errors.email && touched.email
                       ? "border-green-500"
-                      : "border-[#ccc]"
+                      : "border-[#ccc] focus:border-[#644DB3]"
                 }`}
               />
               <ErrorMessage
@@ -189,21 +177,21 @@ export default function LoginForm() {
               />
               <Field
                 name="password"
-                type={showPassword2 ? "text" : "password"}
+                type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
-                className={`border w-full py-2 rounded-md outline-none pl-12 pr-12 md:px-13 dark:bg-transparent dark:text-white ${
+                className={`border w-full py-2 rounded-md outline-none pl-12 pr-12 md:px-13 dark:bg-transparent dark:text-white transition-colors ${
                   errors.password && touched.password
-                    ? "border-red-500 text-[#ff0000]"
+                    ? "border-red-500 text-red-500"
                     : !errors.password && touched.password
                       ? "border-green-500"
-                      : "border-[#ccc]"
+                      : "border-[#ccc] focus:border-[#644DB3]"
                 }`}
               />
               <div
                 className="absolute top-2.5 right-3 cursor-pointer"
-                onClick={() => setShowPassword2(!showPassword2)}
+                onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword2 ? (
+                {showPassword ? (
                   <EyeOff size={22} color="#b1b1b1ff" />
                 ) : (
                   <Eye size={22} color="#b1b1b1ff" />
@@ -221,7 +209,11 @@ export default function LoginForm() {
                 type="submit"
                 size="lg"
                 disabled={mutation.isPending}
-                className="w-full mb-5 bg-gradient-to-b from-[#644DB3] to-[#5B48AC] cursor-pointer text-white flex gap-2 items-center justify-center"
+                className={`w-full mb-5 bg-gradient-to-b from-[#644DB3] to-[#5B48AC] text-white flex gap-2 items-center justify-center transition-all ${
+                  mutation.isPending
+                    ? "opacity-70 cursor-not-allowed"
+                    : "cursor-pointer hover:shadow-lg hover:shadow-[#644DB3]/30"
+                }`}
               >
                 {mutation.isPending ? (
                   <>
@@ -235,14 +227,14 @@ export default function LoginForm() {
 
             <motion.p
               variants={itemVariants}
-              className="text-start text-[#644DB3] cursor-pointer hover:underline text-sm"
+              className="text-start text-[#644DB3] cursor-pointer hover:underline text-sm mb-6"
             >
-              Forgot Password
+              Forgot Password?
             </motion.p>
 
             <motion.div
               variants={itemVariants}
-              className="flex items-center mt-6 mb-8"
+              className="flex items-center mb-8"
             >
               <span className="flex-grow border-t border-[#ccc]" />
               <span className="mx-4 text-sm text-[#898989]">
@@ -271,7 +263,10 @@ export default function LoginForm() {
               className="text-center text-[#898989] mt-8 md:mt-12 text-sm"
             >
               Dont have an account?{" "}
-              <Link href="/register" className="text-[#644DB3] font-semibold">
+              <Link
+                href="/register"
+                className="text-[#644DB3] font-semibold hover:underline"
+              >
                 Sign Up
               </Link>
             </motion.p>

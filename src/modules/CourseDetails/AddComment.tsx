@@ -2,12 +2,11 @@
 
 import React from "react";
 import { useFormik } from "formik";
-import { AxiosError } from "axios";
 import * as Yup from "yup";
 import { Button } from "@/components/ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addCourseComment } from "@/core/services/api/post/addCourseComment";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 interface FormValues {
   answer: string;
@@ -28,15 +27,14 @@ export default function AddComment({ courseId }: AddCommentProps) {
 
   const mutation = useMutation({
     mutationFn: (content: string) => addCourseComment({ courseId, content }),
-    onSuccess: () => {
-      toast.success("Comment sent for review!");
+    onSuccess: (data) => {
+      toast.success(data.message || "Comment sent for review!");
       formik.resetForm();
 
       queryClient.invalidateQueries({ queryKey: ["comments", courseId] });
     },
-    onError: (error: AxiosError<{ message?: string }>) => {
-      const message = error.response?.data?.message || "Something went wrong";
-      toast.error(message);
+    onError: (error: Error) => {
+      toast.error(error.message);
     },
   });
 

@@ -1,12 +1,12 @@
 "use client";
 
-import { use, useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { PostNewPass } from "@/core/services/api/post/NewPass";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 export interface INewPass {
   password: string | null;
@@ -43,9 +43,9 @@ export default function NewPasswordForm({ token }: { token: string }) {
     if (!submited) return;
     if (isPending) return;
     if (error) {
-      toast.error("Something went wrong ❌");
+      toast.error("Something went wrong ");
     } else if (data) {
-      toast.success("password changed successfully ✅");
+      toast.success("password changed successfully ");
       router.push(`/login`);
     }
   }, [state]);

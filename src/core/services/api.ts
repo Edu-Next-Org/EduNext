@@ -1,135 +1,93 @@
-import axios, {
-  AxiosInstance,
-  AxiosError,
-  AxiosRequestConfig,
-  InternalAxiosRequestConfig,
-  AxiosResponse,
-} from "axios";
-import { getAccessToken, setAccessToken, clearAccessToken } from "./token.service";
-import Router from "next/router";
-
-const isServer = typeof window === "undefined";
-
-const API_BASE = isServer 
-  ? "https://edunext-api.onrender.com/api" 
-  : process.env.NEXT_PUBLIC_API_BASE_URL;    
-
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
 }
 
-const api: AxiosInstance = axios.create({
-  baseURL: API_BASE,
-  withCredentials: true, 
-  headers: {
-    "Content-Type": "application/json",
-  },
+interface RefreshResponse {
+  success: boolean;
+  accessToken: string;
+}
+
+const api = axios.create({
+  baseURL:
+    typeof window !== "undefined"
+      ? "/api"
+      : process.env.NEXT_PUBLIC_API_BASE_URL,
+  withCredentials: true,
 });
 
-let isRefreshing = false;
-let refreshSubscribers: Array<(token: string) => void> = [];
-let failedSubscribers: Array<(err: unknown) => void> = [];
-
-const subscribeToken = (cb: (token: string) => void, errCb: (err: unknown) => void) => {
-  refreshSubscribers.push(cb);
-  failedSubscribers.push(errCb);
-};
-
-const onRefreshed = (token: string) => {
-  refreshSubscribers.forEach((cb) => cb(token));
-  refreshSubscribers = [];
-  failedSubscribers = [];
-};
-
-const onFailed = (err: unknown) => {
-  failedSubscribers.forEach((cb) => cb(err));
-  refreshSubscribers = [];
-  failedSubscribers = [];
-};
-
-
-api.interceptors.request.use(
-  (config) => {
-    const token = getAccessToken();
-    if (token && config.headers) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  if (typeof document !== "undefined") {
+    const match = document.cookie.match(/(^|;)\s*accessToken\s*=\s*([^;]+)/);
+    if (match && match[2]) {
+      config.headers.Authorization = `Bearer ${match[2]}`;
     }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
+  }
+  return config;
+});
 
 api.interceptors.response.use(
-  (response: AxiosResponse) => response,
-  async (error: AxiosError & { config?: AxiosRequestConfig }) => {
-    const originalConfig = error.config as CustomAxiosRequestConfig | undefined;
+  (response) => response,
+  async (error: AxiosError) => {
+    const originalRequest = error.config as CustomAxiosRequestConfig;
 
-    if (!originalConfig) return Promise.reject(error);
+    if (!originalRequest) {
+      return Promise.reject(error);
+    }
 
-    if (error.response?.status === 401 && !originalConfig._retry) {
-      if (isRefreshing) {
-        return new Promise<AxiosResponse>((resolve, reject) => {
-          subscribeToken(
-            (token: string) => {
-              if (originalConfig.headers) {
-                originalConfig.headers["Authorization"] = `Bearer ${token}`;
-              }
-              resolve(api(originalConfig));
-            },
-            (err) => {
-              reject(err);
-            }
-          );
-        });
+    if (
+      error.response?.status === 401 &&
+      originalRequest.url?.includes("/auth/refresh-token")
+    ) {
+      if (typeof document !== "undefined") {
+        document.cookie =
+          "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
       }
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
+      return Promise.reject(error);
+    }
 
-      originalConfig._retry = true;
-      isRefreshing = true;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
 
       try {
-       
-        const refreshRes = await axios.post(
-          `${API_BASE}/auth/refresh-token`,
+        const res = await axios.post<RefreshResponse>(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh-token`,
           {},
-          { withCredentials: true }
+          { withCredentials: true },
         );
 
-        const newAccessToken = (refreshRes.data && refreshRes.data.accessToken) as string | undefined;
+        const newAccessToken = res.data?.accessToken;
 
-        if (!newAccessToken) throw new Error("No access token returned from refresh");
+        if (newAccessToken && typeof document !== "undefined") {
+          const isProd = process.env.NODE_ENV === "production";
+          document.cookie = `accessToken=${newAccessToken}; path=/; max-age=900; SameSite=Lax${
+            isProd ? "; Secure" : ""
+          }`;
 
-        setAccessToken(newAccessToken);
-
-        onRefreshed(newAccessToken);
-
-        if (originalConfig.headers) {
-          originalConfig.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          api.defaults.headers.common["Authorization"] =
+            `Bearer ${newAccessToken}`;
+          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
         }
 
-        return api(originalConfig);
-      } catch (refreshErr) {
-        onFailed(refreshErr);
-        clearAccessToken();
-
-      
-        try {
-        //   await axios.post(`${API_BASE}/auth/logout`, {}, { withCredentials: true });
-        } catch (e) {
-          
+        return api(originalRequest);
+      } catch (refreshError: unknown) {
+        if (typeof document !== "undefined") {
+          document.cookie =
+            "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         }
-
-      
-        Router.replace("/auth/login");
-        return Promise.reject(refreshErr);
-      } finally {
-        isRefreshing = false;
+        if (typeof window !== "undefined") {
+          window.location.href = "/login";
+        }
+        return Promise.reject(refreshError);
       }
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

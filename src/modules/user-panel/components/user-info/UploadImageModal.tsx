@@ -13,7 +13,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import React, { ChangeEvent, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 interface IUploadImageModalProps {
   open: boolean;

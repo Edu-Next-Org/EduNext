@@ -5,8 +5,7 @@ import { Mail, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PostForgotPass } from "@/core/services/api/post/forgotPass";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 export interface IEmail {
   email: string | null;
@@ -37,9 +36,9 @@ export default function ResetPasswordForm() {
     if (!submitted) return;
     if (isPending) return;
     if (error) {
-      toast.error("Something went wrong ❌");
+      toast.error("Something went wrong ");
     } else if (data) {
-      toast.success("email sent successfully ✅");
+      toast.success("email sent successfully ");
       if (data.token) {
         router.push(`/forgotPass/${data.token}`);
       }
