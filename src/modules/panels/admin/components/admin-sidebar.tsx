@@ -2,10 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Bell, ChevronRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { Menu, ChevronRight } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { adminNavItems, logoutNavItem } from "../utils/nav";
@@ -33,7 +31,7 @@ function NavList({ mobile = false }: { mobile?: boolean }) {
       <nav className="space-y-1">
         {adminNavItems.map((item) => {
           const active =
-            item.href === "/admin"
+            item.href === "/panels/admin"
               ? pathname === "/admin"
               : pathname.startsWith(item.href);
 

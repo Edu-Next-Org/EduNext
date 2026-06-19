@@ -1,12 +1,13 @@
+import React from "react";
 import { VideoPlayer } from "@/modules/main/CourseDetails/VideoPlayer";
+import { EnrollCard } from "@/modules/main/CourseDetails/EnrollCard";
 import {
   StaggerWrapper,
   FadeInItem,
 } from "../../../../modules/main/CourseDetails/MotionWrappers";
-import { GetCourseByID } from "@/core/services/api/Get/GetCourseByID";
 import AddComment from "@/modules/main/CourseDetails/AddComment";
+import { GetCourseByID } from "@/core/services/api/Get/GetCourseByID";
 import ReviewSection from "@/modules/main/CourseDetails/ReviewSection";
-import { EnrollCard } from "@/modules/main/CourseDetails/EnrollCard";
 import RelatedCourses from "@/modules/main/CourseDetails/RelatedCourses";
 
 export default async function CoursePage({

@@ -77,7 +77,7 @@ export function TeacherDetailClient({ teacher }: TeacherDetailClientProps) {
                 className="rounded-xl border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-500/30 dark:bg-violet-500/10 dark:text-violet-300"
               >
                 <UserCheck className="mr-1 h-3 w-3 inline" />
-                Instructor
+                Teacher
               </Badge>
             </div>
 

@@ -261,7 +261,7 @@ export function ManageCourses({
                         <td className="px-4 py-4">
                           <div className="flex items-center gap-3">
                             <Link
-                              href={`/coursedetail/${course.id}`}
+                              href={`/courses/${course.id}`}
                               className="relative h-14 w-24 rounded-xl transition-all duration-300  hover:shadow-lg"
                             >
                               <Image
@@ -274,7 +274,7 @@ export function ManageCourses({
 
                             <div>
                               <Link
-                                href={`/coursedetail/${course.id}`}
+                                href={`/courses/${course.id}`}
                                 className="font-medium text-slate-900 dark:text-[white] hover:text-violet-600 dark:hover:!text-violet-400 transition-colors"
                               >
                                 {course.title}
@@ -384,7 +384,7 @@ export function ManageCourses({
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex gap-3">
                         <Link
-                          href={`/coursedetail/${course.id}`}
+                          href={`/courses/${course.id}`}
                           className="relative h-16 w-24 shrink-0 rounded-xl"
                         >
                           <Image
@@ -397,7 +397,7 @@ export function ManageCourses({
 
                         <div>
                           <Link
-                            href={`/coursedetail/${course.id}`}
+                            href={`/courses/${course.id}`}
                             className="font-semibold text-slate-900 dark:text-white"
                           >
                             {course.title}

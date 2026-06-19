@@ -15,12 +15,14 @@ interface PaginationCompProps {
   currentPage: number;
   totalPages: number;
   paramName?: string;
+  onPageChange?: (page: number) => void;
 }
 
 export function PaginationComp({
   currentPage,
   totalPages,
   paramName = "page",
+  onPageChange,
 }: PaginationCompProps) {
   const searchParams = useSearchParams();
 
@@ -42,7 +44,13 @@ export function PaginationComp({
         links.push(
           <PaginationItem key={i}>
             <PaginationLink
-              href={createPageURL(i)}
+              href={onPageChange ? "#" : createPageURL(i)}
+              onClick={(e) => {
+                if (onPageChange) {
+                  e.preventDefault();
+                  onPageChange(i);
+                }
+              }}
               isActive={currentPage === i}
               className={
                 currentPage === i
@@ -80,7 +88,17 @@ export function PaginationComp({
         <PaginationContent className="gap-1 sm:gap-2">
           <PaginationItem>
             <PaginationPrevious
-              href={currentPage > 1 ? createPageURL(currentPage - 1) : "#"}
+              href={
+                onPageChange || currentPage <= 1
+                  ? "#"
+                  : createPageURL(currentPage - 1)
+              }
+              onClick={(e) => {
+                if (onPageChange && currentPage > 1) {
+                  e.preventDefault();
+                  onPageChange(currentPage - 1);
+                }
+              }}
               className={`rounded-xl px-2.5 py-2 text-[12px] font-medium transition-colors hover:bg-violet-50 hover:text-violet-700 dark:text-[#ccc] dark:hover:bg-[#454545] dark:hover:text-white sm:h-10 sm:px-4 sm:text-sm ${
                 currentPage <= 1 ? "pointer-events-none opacity-50" : ""
               }`}
@@ -92,8 +110,16 @@ export function PaginationComp({
           <PaginationItem>
             <PaginationNext
               href={
-                currentPage < totalPages ? createPageURL(currentPage + 1) : "#"
+                onPageChange || currentPage >= totalPages
+                  ? "#"
+                  : createPageURL(currentPage + 1)
               }
+              onClick={(e) => {
+                if (onPageChange && currentPage < totalPages) {
+                  e.preventDefault();
+                  onPageChange(currentPage + 1);
+                }
+              }}
               className={`rounded-xl px-2.5 py-2 text-[12px] font-medium transition-colors hover:bg-violet-50 hover:text-violet-700 dark:text-[#ccc] dark:hover:bg-[#454545] dark:hover:text-white sm:h-10 sm:px-4 sm:text-sm ${
                 currentPage >= totalPages
                   ? "pointer-events-none opacity-50"

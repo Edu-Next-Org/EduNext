@@ -1,29 +1,33 @@
 import { SalesReports } from "@/modules/panels/admin/components/sales-reports/sales-reports";
-import { getSalesData } from "@/modules/panels/admin/data/mock";
+import { getSalesOverview } from "@/core/services/api/Get/GetSalesOverview";
 import { getAllPayments } from "@/core/services/api/Get/GetAllPayment";
+import { getLatestTransactions } from "@/core/services/api/Get/GetLatestTransaction";
 
 type PageProps = {
   searchParams: Promise<{
     paymentPage?: string;
+    period?: string;
   }>;
 };
 
 export default async function Page({ searchParams }: PageProps) {
   const params = await searchParams;
 
-  const paymentPage = params.paymentPage ? Number(params.paymentPage) : 1;
+  const periodParam = params.period?.replace("d", "") || "7";
+  const periodNumber = parseInt(periodParam, 10);
 
-  const [salesData, allPaymentsRes] = await Promise.all([
-    getSalesData(),
-    getAllPayments({ page: paymentPage, limit: 10 }),
-  ]);
+  const [salesOverviewRes, allPaymentsRes, latestTransactions] =
+    await Promise.all([
+      getSalesOverview(periodNumber),
+      getAllPayments({ page: 1, limit: 10 }),
+      getLatestTransactions(4),
+    ]);
 
   return (
     <SalesReports
-      summary={salesData.summary}
-      series={salesData.series}
-      transactions={salesData.transactions}
+      salesOverviewData={salesOverviewRes.data}
       allPaymentsData={allPaymentsRes}
+      latestTransactions={latestTransactions}
     />
   );
 }

@@ -15,7 +15,6 @@ export default async function RelatedCourses({
   if (!relatedCourses || relatedCourses.length === 0) {
     return null;
   }
-
   return (
     <div className="bg-white rounded-[2.5rem] p-5 shadow-sm border border-gray-100 dark:bg-[#333] dark:border-none">
       <h3 className="text-xl font-bold mb-5 px-1 dark:text-[white]">
@@ -37,7 +36,7 @@ export default async function RelatedCourses({
           return (
             <li key={course._id}>
               <Link
-                href={`/coursedetail/${course._id}`}
+                href={`/courses/${course._id}`}
                 className="group flex items-center justify-between gap-3 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-[#222] transition-colors cursor-pointer min-w-0"
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">

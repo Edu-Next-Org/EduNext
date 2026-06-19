@@ -7,7 +7,7 @@ import { AdminTopbar } from "./admin-topbar";
 
 export function AdminShell({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen !dark:bg-[red] bg-gradient-to-br from-[#fbf8ff] via-[#f8f4ff] to-[#f4efff] text-slate-900 ">
+    <div className="min-h-screen !dark:bg-[red] bg-gradient-to-br from-[#fbf8ff] via-[#f8f4ff] to-[#f4efff] text-slate-900 overflow-x-hidden ">
       <AdminSidebar />
       <div className="lg:pl-72">
         <AdminTopbar />

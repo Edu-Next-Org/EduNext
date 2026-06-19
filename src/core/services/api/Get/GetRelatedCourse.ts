@@ -35,13 +35,12 @@ export async function getRelatedCourses(
 
   try {
     const res = await fetch(url, {
-      next: { revalidate: 900 },
+      next: { revalidate: 600 },
     });
 
     if (!res.ok) {
       return [];
     }
-
     const result: RelatedCoursesResponse = await res.json();
     return result.data;
   } catch (error) {
