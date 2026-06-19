@@ -9,14 +9,21 @@ import type { AdminTransaction } from "../../data/mock";
 import { AllPaymentModal } from "./modals/allPaymentModal";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import type { AllPaymentsPageData } from "@/core/services/api/Get/GetAllPayment";
 
 type Props = {
   summary: { label: string; value: string; delta: string }[];
   series: number[];
   transactions: AdminTransaction[];
+  allPaymentsData: AllPaymentsPageData;
 };
 
-export function SalesReports({ summary, series, transactions }: Props) {
+export function SalesReports({
+  summary,
+  series,
+  transactions,
+  allPaymentsData,
+}: Props) {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   const max = Math.max(...series);
@@ -171,6 +178,7 @@ export function SalesReports({ summary, series, transactions }: Props) {
       <AllPaymentModal
         isOpen={isPaymentModalOpen}
         onClose={() => setIsPaymentModalOpen(false)}
+        allPaymentsData={allPaymentsData}
       />
     </motion.div>
   );

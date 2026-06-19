@@ -7,6 +7,7 @@ import {
   GraduationCap,
   Search,
   ShieldCheck,
+  Users,
 } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,6 +20,8 @@ import type { AdminCategory } from "@/core/services/api/Get/GetAllCategoryAdmin"
 import type { AdminLevel } from "@/core/services/api/Get/GetAllLevelsAdmin";
 import type { AdminTransaction } from "@/core/services/api/Get/GetLatestTransaction";
 import type { AllPaymentsPageData } from "@/core/services/api/Get/GetAllPayment";
+import { UsersPageData } from "@/core/services/api/Get/GetAllUser";
+import { SalesOverviewData } from "@/core/services/api/Get/GetSalesOverview";
 import {
   Select,
   SelectContent,
@@ -29,7 +32,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { PaginationComp } from "@/components/PaginationComp";
 import { AllPaymentModal } from "./sales-reports/modals/allPaymentModal";
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Lottie from "lottie-react";
 import Empty from "@/assets/Lottie/Empty.json";
@@ -42,6 +45,8 @@ type Props = {
   levels: AdminLevel[];
   latestTransactions: AdminTransaction[];
   allPaymentsData: AllPaymentsPageData;
+  recentUsersData: UsersPageData;
+  salesOverviewData: SalesOverviewData;
 };
 
 const formatDelta = (diff: number, prefix: string = "") => {
@@ -63,6 +68,8 @@ export function AdminDashboard({
   levels,
   latestTransactions,
   allPaymentsData,
+  recentUsersData,
+  salesOverviewData,
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -72,6 +79,10 @@ export function AdminDashboard({
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(() =>
     searchParams.has("paymentPage"),
   );
+
+  const recentSignups = recentUsersData?.users
+    ? recentUsersData.users.slice(0, 4)
+    : [];
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -142,6 +153,21 @@ export function AdminDashboard({
   const handleOpenPaymentModal = () => {
     setIsPaymentModalOpen(true);
   };
+
+  const chartRevenue = salesOverviewData?.chart?.revenue || [];
+  const maxRevenue = Math.max(...chartRevenue, 1);
+
+  const svgPoints = chartRevenue
+    .map((val, idx) => {
+      const x =
+        chartRevenue.length > 1 ? (idx / (chartRevenue.length - 1)) * 100 : 0;
+      const y = 100 - (val / maxRevenue) * 80 - 10;
+      return `${x},${y}`;
+    })
+    .join(" ");
+
+  const revMetric = salesOverviewData?.cards?.revenue;
+  const transMetric = salesOverviewData?.cards?.transactions;
 
   return (
     <div className="space-y-6 ">
@@ -464,45 +490,112 @@ export function AdminDashboard({
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Link
-                href="/admin/user-management"
-                className=" w-full text-center rounded-2xl border-1 border-[black] dark:border-[#898989] p-2 
-                 hover:bg-[black] hover:text-[white] dark:hover:bg-[white] dark:hover:text-[black] transition-all duration-200"
-              >
-                View All
+              {recentSignups.map((user) => (
+                <div
+                  key={user.id}
+                  className="flex items-center justify-between border-b border-[#eee] dark:border-[#444] pb-3 last:border-none last:pb-0"
+                >
+                  <div className="space-y-0.5">
+                    <div className="font-medium dark:text-[white]">
+                      {user.name || "Unknown User"}
+                    </div>
+                    <div className="text-xs text-slate-500 dark:text-[#898989]">
+                      {user.email}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col items-end gap-1.5">
+                    <div className="text-xs text-slate-500 dark:text-[#898989]">
+                      {user.createdAt}
+                    </div>
+                    <Badge
+                      className={cn(
+                        "rounded-full border px-2.5 py-0.5 text-[10px] font-medium transition-all",
+                        user.gender?.toLowerCase() === "male" &&
+                          "!border-violet-600 !bg-violet-50 !text-violet-600 dark:!border-violet-500 dark:!bg-violet-500/10 dark:!text-violet-400",
+                        user.gender?.toLowerCase() === "female" &&
+                          "!border-pink-600 !bg-pink-50 !text-pink-600 dark:!border-pink-500 dark:!bg-pink-500/10 dark:!text-pink-400",
+                        (!user.gender ||
+                          !["male", "female"].includes(
+                            user.gender.toLowerCase(),
+                          )) &&
+                          "!border-indigo-700 !bg-indigo-50 !text-indigo-700 dark:!border-indigo-300 dark:!bg-indigo-500/20 dark:!text-indigo-300",
+                      )}
+                    >
+                      {user.gender?.toLowerCase() === "male"
+                        ? "Male"
+                        : user.gender?.toLowerCase() === "female"
+                          ? "Female"
+                          : "Other"}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+              <Link href="/admin/user-management">
+                <Button
+                  variant="outline"
+                  className="w-[97%] flex items-center py-1 justify-center mt-4  mx-auto cursor-pointer rounded-2xl border-violet-600 text-violet-600 hover:text-violet-600 hover:bg-violet-50 dark:border-violet-500 dark:text-violet-400 dark:hover:bg-violet-500/10"
+                >
+                  <Users className="mr-1 h-4 w-4" />
+                  View All User
+                </Button>
               </Link>
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl border-white/70 bg-white/80 shadow-sm backdrop-blur dark:bg-[#333] py-5">
-            <CardHeader className="flex flex-row items-center justify-between pb-5">
-              <CardTitle className="text-xl dark:text-[white]">
-                Sales Overview
-              </CardTitle>
-              <div className="text-xs text-slate-500 dark:text-[#898989]">
-                Last 30 Days
-              </div>
+          <Card className="xl:col-span-8 rounded-3xl border-white/70 bg-white/80 shadow-sm backdrop-blur py-5 dark:bg-[#333]">
+            <CardHeader>
+              <CardTitle>Sales Overview</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="mb-4 flex items-end justify-between">
+              <div className="mb-4 mt-2 flex flex-col items-start justify-between ">
                 <div>
-                  <div className="text-3xl font-semibold tracking-tight dark:text-[white]">
-                    $25,300
+                  <div className="text-3xl font-semibold tracking-tight dark:text-white">
+                    ${revMetric?.value?.toLocaleString() || "0"}
                   </div>
-                  <div className="text-sm text-slate-500 dark:text-[#898989]">
-                    Transactions
+                  <div className="text-sm text-slate-500 dark:text-[#ccc] mt-2">
+                    Last {salesOverviewData?.period || 7} days revenue
                   </div>
                 </div>
-                <div className="text-right text-sm text-emerald-600">
-                  <div>+15.7%</div>
-                  <div>+10.2%</div>
+                <div className="flex gap-2 mt-5 ">
+                  {revMetric && (
+                    <Badge
+                      className={cn(
+                        "rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors",
+                        revMetric.changePercent >= 0
+                          ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 hover:bg-emerald-100"
+                          : "bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400 hover:bg-rose-100",
+                      )}
+                    >
+                      {revMetric.changePercent >= 0 ? "+" : ""}
+                      {revMetric.changePercent}% Revenue
+                    </Badge>
+                  )}
+
+                  {transMetric && (
+                    <Badge
+                      className={cn(
+                        "rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors",
+                        transMetric.changePercent >= 0
+                          ? "bg-violet-100 text-violet-700 dark:bg-violet-500/10 dark:text-violet-400 hover:bg-violet-100"
+                          : "bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400 hover:bg-rose-100",
+                      )}
+                    >
+                      {transMetric.changePercent >= 0 ? "+" : ""}
+                      {transMetric.changePercent}% Transactions
+                    </Badge>
+                  )}
                 </div>
               </div>
 
-              <div className="h-40 rounded-3xl bg-gradient-to-b from-violet-50 to-white p-4 ">
-                <svg viewBox="0 0 320 140" className="h-full w-full">
+              <div className="h-64 rounded-3xl border-2 border-[#ccc] dark:border-slate-100 bg-[white] p-4 dark:!bg-[#454545]">
+                <svg
+                  viewBox="0 0 100 100"
+                  className="h-full w-full"
+                  preserveAspectRatio="none"
+                >
                   <defs>
-                    <linearGradient id="salesFill" x1="0" x2="0" y1="0" y2="1">
+                    <linearGradient id="fill" x1="0" x2="0" y1="0" y2="1">
                       <stop
                         offset="0%"
                         stopColor="#8b5cf6"
@@ -515,17 +608,23 @@ export function AdminDashboard({
                       />
                     </linearGradient>
                   </defs>
-                  <path
-                    d="M0,110 C20,112 35,104 50,100 C65,96 80,88 95,90 C110,92 125,84 140,78 C155,72 170,76 185,68 C200,60 215,56 230,58 C245,60 260,50 275,44 C290,38 305,40 320,36 L320,140 L0,140 Z"
-                    fill="url(#salesFill)"
-                  />
-                  <path
-                    d="M0,110 C20,112 35,104 50,100 C65,96 80,88 95,90 C110,92 125,84 140,78 C155,72 170,76 185,68 C200,60 215,56 230,58 C245,60 260,50 275,44 C290,38 305,40 320,36"
-                    fill="none"
-                    stroke="#8b5cf6"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                  />
+                  {svgPoints && (
+                    <>
+                      <polyline
+                        fill="url(#fill)"
+                        stroke="#8b5cf6"
+                        strokeWidth="2"
+                        points={`${svgPoints} 100,100 0,100`}
+                      />
+                      <polyline
+                        fill="none"
+                        stroke="#8b5cf6"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        points={svgPoints}
+                      />
+                    </>
+                  )}
                 </svg>
               </div>
             </CardContent>
@@ -541,7 +640,7 @@ export function AdminDashboard({
               {latestTransactions.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between"
+                  className="flex items-center justify-between border-b border-[#eee] dark:border-[#444] pb-3 last:border-none"
                 >
                   <div>
                     <div className="font-medium dark:text-[white]">
@@ -566,7 +665,7 @@ export function AdminDashboard({
                 variant="outline"
                 className="w-[90%] flex items-center justify-center mt-4  mx-auto cursor-pointer rounded-2xl border-violet-600 text-violet-600 hover:text-violet-600 hover:bg-violet-50 dark:border-violet-500 dark:text-violet-400 dark:hover:bg-violet-500/10"
               >
-                <DollarSign className="mr-2 h-4 w-4" />
+                <DollarSign className="mr-1 h-4 w-4" />
                 View All Payments
               </Button>
             </div>

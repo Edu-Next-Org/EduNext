@@ -1,15 +1,29 @@
-export const revalidate = 120;
-
 import { SalesReports } from "@/modules/admin/components/sales-reports/sales-reports";
 import { getSalesData } from "@/modules/admin/data/mock";
+import { getAllPayments } from "@/core/services/api/Get/GetAllPayment";
 
-export default async function Page() {
-  const data = await getSalesData();
+type PageProps = {
+  searchParams: Promise<{
+    paymentPage?: string;
+  }>;
+};
+
+export default async function Page({ searchParams }: PageProps) {
+  const params = await searchParams;
+
+  const paymentPage = params.paymentPage ? Number(params.paymentPage) : 1;
+
+  const [salesData, allPaymentsRes] = await Promise.all([
+    getSalesData(),
+    getAllPayments({ page: paymentPage, limit: 10 }),
+  ]);
+
   return (
     <SalesReports
-      summary={data.summary}
-      series={data.series}
-      transactions={data.transactions}
+      summary={salesData.summary}
+      series={salesData.series}
+      transactions={salesData.transactions}
+      allPaymentsData={allPaymentsRes}
     />
   );
 }
