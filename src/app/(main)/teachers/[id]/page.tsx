@@ -1,4 +1,4 @@
-import { TeacherDetailClient } from "@/modules/Teachers/TeacherDetailClient";
+import { TeacherDetailClient } from "@/modules/main/Teachers/TeacherDetailClient";
 import { getTeacherById } from "@/core/services/api/Get/GetTeacherById";
 import { notFound } from "next/navigation";
 

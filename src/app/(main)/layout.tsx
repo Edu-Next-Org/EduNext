@@ -1,5 +1,5 @@
-import Navbar from "@/modules/header/views/Navbar";
-import Footer from "@/modules/footer/views/Footer";
+import Navbar from "@/modules/layout/header/views/Navbar";
+import Footer from "@/modules/layout/footer/views/Footer";
 
 export default function MainLayout({
   children,

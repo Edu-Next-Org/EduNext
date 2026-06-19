@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import PaypalCheckoutContent from "@/modules/Payment/PaypalCheckoutContent";
+import PaypalCheckoutContent from "@/modules/main/Payment/PaypalCheckoutContent";
 
 export default function PaypalCheckoutPage() {
   return (

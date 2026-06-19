@@ -1,4 +1,4 @@
-import NewPassView from "@/modules/ResetPass/view/NewPassView";
+import NewPassView from "@/modules/auth/ResetPass/view/NewPassView";
 import React from "react";
 
 async function ForgotPass({ params }: { params: Promise<{ token: string }> }) {

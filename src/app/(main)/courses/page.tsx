@@ -1,4 +1,4 @@
-import Courses from "@/modules/Courses/views/Courses";
+import Courses from "@/modules/main/Courses/views/Courses";
 
 interface EventPageProps {
   searchParams: Promise<{

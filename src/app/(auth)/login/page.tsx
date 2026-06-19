@@ -1,5 +1,5 @@
-import LoginForm from "@/modules/Login/LoginForm";
-import LoginGif from "@/modules/Login/LoginGif";
+import LoginForm from "@/modules/auth/Login/LoginForm";
+import LoginGif from "@/modules/auth/Login/LoginGif";
 
 export default function Login() {
   return (

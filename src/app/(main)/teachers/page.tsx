@@ -1,4 +1,4 @@
-import { TeachersListClient } from "@/modules/Teachers/TeachersListClient";
+import { TeachersListClient } from "@/modules/main/Teachers/TeachersListClient";
 import { getAllTeachers } from "@/core/services/api/Get/GetAllTeacher";
 
 type ApiTeacher = {

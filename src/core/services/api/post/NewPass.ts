@@ -60,7 +60,7 @@
 //     };
 //   }
 // };
-import { INewPass } from "@/modules/ResetPass/Components/NewPasswordForm";
+import { INewPass } from "@/modules/auth/ResetPass/Components/NewPasswordForm";
 import axios from "axios";
 import { z } from "zod";
 
@@ -77,14 +77,16 @@ const UpsertValidation = (payload: INewPass) => {
   const result = validationSchema.safeParse(payload);
   if (!result.success) {
     const error: Record<string, string> = {};
-    result.error.issues.forEach((err) => { error[err.path[0] as string] = err.message; });
+    result.error.issues.forEach((err) => {
+      error[err.path[0] as string] = err.message;
+    });
     return error;
   }
   return null;
 };
 
 export const PostNewPass = async (
-  prevData: { data: INewPass; error: Record<string, string> | null; },
+  prevData: { data: INewPass; error: Record<string, string> | null },
   formData: FormData,
 ) => {
   const payload = {
@@ -99,8 +101,14 @@ export const PostNewPass = async (
   const API_BASE = isServer ? "https://edunext-api.onrender.com/api" : "/api";
 
   try {
-    const finalPayload = { password: payload.password, token: payload.token } as INewPass;
-    const result = await axios.post(`${API_BASE}/auth/reset-password`, finalPayload);
+    const finalPayload = {
+      password: payload.password,
+      token: payload.token,
+    } as INewPass;
+    const result = await axios.post(
+      `${API_BASE}/auth/reset-password`,
+      finalPayload,
+    );
     return { data: result.data, error };
   } catch (e) {
     return { data: prevData.data, error: { message: "somthing went wrong !" } };

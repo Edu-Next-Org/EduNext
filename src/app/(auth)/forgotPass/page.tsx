@@ -1,5 +1,4 @@
-import ResetPasswordView from "@/modules/ResetPass/view/ResetPassView";
-import React from "react";
+import ResetPasswordView from "@/modules/auth/ResetPass/view/ResetPassView";
 
 function ResetPassPage() {
   return (
