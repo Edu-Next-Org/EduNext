@@ -8,13 +8,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Trash2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 
 interface DeleteCommentModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
   isReply?: boolean;
+  isPending?: boolean;
 }
 
 export function DeleteCommentModal({
@@ -22,6 +23,7 @@ export function DeleteCommentModal({
   onClose,
   onConfirm,
   isReply = false,
+  isPending = false,
 }: DeleteCommentModalProps) {
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
@@ -39,14 +41,33 @@ export function DeleteCommentModal({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="rounded-2xl" onClick={onClose}>
+          <AlertDialogCancel
+            className="rounded-2xl cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            }}
+            disabled={isPending}
+          >
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
-            className="rounded-2xl bg-rose-600 hover:bg-rose-700 text-white"
-            onClick={onConfirm}
+            onClick={(e) => {
+              e.preventDefault();
+              onConfirm();
+            }}
+            disabled={isPending}
+            className=" cursor-pointer rounded-2xl bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center disabled:opacity-70"
           >
-            Yes, Delete it
+            {isPending ? (
+              <>
+                <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                Deleting...
+              </>
+            ) : (
+              "Yes, Delete it"
+            )}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -5,14 +5,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import type { AdminComment } from "../../../data/mock";
+import type { MappedComment } from "@/core/services/api/Get/GetAllCommentAdmin";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface ViewCommentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  comment: AdminComment;
+  comment: MappedComment;
 }
 
 export function ViewCommentModal({
@@ -34,7 +34,7 @@ export function ViewCommentModal({
             <div className="flex items-center gap-4">
               <div className="relative h-14 w-14 rounded-full bg-slate-100">
                 <Image
-                  src={comment.userImage || "/images/avatar-placeholder.png"}
+                  src={comment.userImage}
                   alt={comment.userName}
                   fill
                   className="rounded-full object-cover shadow-sm border border-slate-200 dark:border-[#555]"
@@ -55,7 +55,7 @@ export function ViewCommentModal({
                 "rounded-full px-3 py-1 font-normal",
                 comment.isConfirmed
                   ? "!bg-emerald-100 !text-emerald-700 dark:!bg-emerald-500/20 dark:!text-emerald-400"
-                  : "!bg-rose-100 !text-rose-700 dark:!bg-rose-500/20 dark:!text-rose-400",
+                  : "!bg-amber-100 !text-amber-400 dark:!bg-amber-500/20 dark:!text-amber-400",
               )}
             >
               {comment.isConfirmed ? "Confirmed" : "Pending"}

@@ -74,7 +74,7 @@ export function DeleteUserModal({
               handleDelete();
             }}
             disabled={isPending || !userId}
-            className=" cursor-pointer rounded-2xl bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center"
+            className=" disabled:opacity-70 cursor-pointer rounded-2xl bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center"
           >
             {isPending ? (
               <>
