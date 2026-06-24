@@ -13,14 +13,17 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { uploadProfileImage } from "@/core/services/api/post/UploadProfileAdmin";
+import { deleteProfileImage } from "@/core/services/api/delete/DeleteProfileAdmin";
 
 type AdminProfileModalProps = {
   name: string;
   role?: string;
   initials: string;
   imageSrc?: string | null;
-  uploadUrl: string;
-  deleteUrl: string;
   onImageChange?: (nextImageSrc: string | null) => void;
   className?: string;
 };
@@ -33,20 +36,51 @@ export default function AdminProfileModal({
   role = "Admin",
   initials,
   imageSrc = null,
-  uploadUrl,
-  deleteUrl,
+
   onImageChange,
   className,
 }: AdminProfileModalProps) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState<string | null>(imageSrc);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const uploadMutation = useMutation({
+    mutationFn: uploadProfileImage,
+    onSuccess: (response) => {
+      const nextUrl = response.data.user.profileImage;
+      setCurrentImage(nextUrl);
+      onImageChange?.(nextUrl);
+      clearSelectedFile();
+      setOpen(false);
+      toast.success(response.message || "Profile image updated successfully");
+      router.refresh();
+    },
+    onError: (err: Error) => {
+      setError(err.message);
+      toast.error(err.message);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteProfileImage,
+    onSuccess: (response) => {
+      setCurrentImage(null);
+      onImageChange?.(null);
+      clearSelectedFile();
+      setOpen(false);
+      toast.success(response.message || "Profile image deleted successfully");
+      router.refresh();
+    },
+    onError: (err: Error) => {
+      setError(err.message);
+      toast.error(err.message);
+    },
+  });
 
   useEffect(() => {
     setCurrentImage(imageSrc);
@@ -90,12 +124,12 @@ export default function AdminProfileModal({
     setError(null);
 
     if (!ACCEPTED_TYPES.includes(file.type)) {
-      setError("Only JPG, PNG, WEBP and AVIF formats are allowed.");
+      setError("Only JPG, PNG, WEBP and AVIF formats are allowed");
       return;
     }
 
     if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-      setError(`Image size must be smaller than ${MAX_FILE_SIZE_MB}MB.`);
+      setError(`Image size must be smaller than ${MAX_FILE_SIZE_MB}MB`);
       return;
     }
 
@@ -107,84 +141,21 @@ export default function AdminProfileModal({
     setPreviewUrl(nextPreview);
   };
 
-  const handleUpload = async () => {
-    if (!selectedFile || uploading || deleting) return;
-
-    setUploading(true);
+  const handleUpload = () => {
+    if (!selectedFile || uploadMutation.isPending || deleteMutation.isPending)
+      return;
     setError(null);
-
-    try {
-      const formData = new FormData();
-
-      formData.append("file", selectedFile);
-
-      const res = await fetch(uploadUrl, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) {
-        throw new Error("Image upload failed.");
-      }
-
-      const data: unknown = await res.json().catch(() => ({}) as unknown);
-
-      const nextUrl =
-        typeof data === "object" &&
-        data !== null &&
-        ("imageUrl" in data || "url" in data || "path" in data)
-          ? ((data as { imageUrl?: string; url?: string; path?: string })
-              .imageUrl ??
-            (data as { imageUrl?: string; url?: string; path?: string }).url ??
-            (data as { imageUrl?: string; url?: string; path?: string }).path ??
-            null)
-          : null;
-
-      if (!nextUrl) {
-        throw new Error("The upload response must return the new image URL.");
-      }
-
-      setCurrentImage(nextUrl);
-
-      onImageChange?.(nextUrl);
-
-      clearSelectedFile();
-
-      setOpen(false);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Image upload failed.");
-    } finally {
-      setUploading(false);
-    }
+    uploadMutation.mutate(selectedFile);
   };
 
-  const handleDelete = async () => {
-    if (!currentImage || uploading || deleting) return;
-    setDeleting(true);
+  const handleDelete = () => {
+    if (!currentImage || uploadMutation.isPending || deleteMutation.isPending)
+      return;
     setError(null);
-
-    try {
-      const res = await fetch(deleteUrl, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to delete image.");
-      }
-
-      setCurrentImage(null);
-
-      onImageChange?.(null);
-
-      clearSelectedFile();
-
-      setOpen(false);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to delete image.");
-    } finally {
-      setDeleting(false);
-    }
+    deleteMutation.mutate();
   };
+
+  const STATIC_AVATAR = "/images/people.png";
 
   const shownImage = previewUrl ?? currentImage;
 
@@ -200,14 +171,11 @@ export default function AdminProfileModal({
         )}
       >
         <Avatar className="h-11 w-11 rounded-full ring-2 cursor-pointer ring-transparent transition-all duration-300 group-hover:ring-violet-300 group-focus-visible:ring-violet-400">
-          {currentImage ? (
-            <AvatarImage
-              src={currentImage}
-              alt={name}
-              className="object-cover"
-            />
-          ) : null}
-
+          <AvatarImage
+            src={currentImage ?? STATIC_AVATAR}
+            alt={name}
+            className="object-cover dark:bg-[#ccc]"
+          />
           <AvatarFallback className="bg-gradient-to-br from-violet-100 to-indigo-100 text-sm font-semibold text-violet-700 dark:from-[#4b4b4b] dark:to-[#3a3a3a] dark:text-white">
             {initials}
           </AvatarFallback>
@@ -243,14 +211,11 @@ export default function AdminProfileModal({
                 <div className="flex flex-col items-center justify-center gap-4  h-full 2xl:gap-10 text-center  sm:text-center ">
                   <div className="flex shrink-0 items-center justify-center ">
                     <Avatar className="h-24 w-24 rounded-full  ring-4 ring-white shadow-lg sm:h-28 sm:w-28 md:h-32 md:w-32 dark:ring-[#444]">
-                      {shownImage ? (
-                        <AvatarImage
-                          src={shownImage}
-                          alt={name}
-                          className="object-cover"
-                        />
-                      ) : null}
-
+                      <AvatarImage
+                        src={shownImage ?? STATIC_AVATAR}
+                        alt={name}
+                        className="object-cover dark:bg-[#ccc]"
+                      />
                       <AvatarFallback className="bg-gradient-to-br from-violet-100 to-indigo-100 text-xl font-semibold text-violet-700 dark:from-[#4b4b4b] dark:to-[#3a3a3a] dark:text-white sm:text-2xl">
                         {initials}
                       </AvatarFallback>
@@ -340,10 +305,14 @@ export default function AdminProfileModal({
                   <Button
                     type="button"
                     onClick={handleUpload}
-                    disabled={!selectedFile || uploading || deleting}
+                    disabled={
+                      !selectedFile ||
+                      uploadMutation.isPending ||
+                      deleteMutation.isPending
+                    }
                     className="h-11 rounded-2xl w-full cursor-pointer bg-violet-600 text-white  shadow-sm hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    {uploading ? (
+                    {uploadMutation.isPending ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Uploading...
@@ -362,10 +331,14 @@ export default function AdminProfileModal({
                     type="button"
                     variant="outline"
                     onClick={handleDelete}
-                    disabled={!currentImage || uploading || deleting}
+                    disabled={
+                      !currentImage ||
+                      uploadMutation.isPending ||
+                      deleteMutation.isPending
+                    }
                     className="h-11 rounded-2xl cursor-pointer border-red-200 bg-red-50 text-red-600 shadow-sm hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-200 dark:hover:bg-red-500/15"
                   >
-                    {deleting ? (
+                    {deleteMutation.isPending ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Deleting...
@@ -382,7 +355,11 @@ export default function AdminProfileModal({
                     type="button"
                     variant="ghost"
                     onClick={clearSelectedFile}
-                    disabled={!selectedFile || uploading || deleting}
+                    disabled={
+                      !selectedFile ||
+                      uploadMutation.isPending ||
+                      deleteMutation.isPending
+                    }
                     className="h-11 rounded-2xl cursor-pointer text-slate-500 hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-60 dark:text-[#cfcfcf] dark:hover:bg-[#444] dark:hover:text-white"
                   >
                     Cancel Selected File

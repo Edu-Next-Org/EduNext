@@ -1,19 +1,21 @@
 "use client";
 
-import { Bell, Home, Moon, Search, Sun } from "lucide-react";
+import { Home, Moon, Sun } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
-import { adminBadgeMap, adminTitleMap } from "../utils/nav";
+import { adminTitleMap } from "../utils/nav";
 import { useTheme } from "@/components/useThemes/useThemes";
+import type { UserProfile } from "@/core/services/api/Get/GetUserInfoAdmin";
 
 import Link from "next/link";
-import { MobileSidebar } from "./admin-sidebar";
 
-export function AdminTopbar() {
+export function AdminTopbar({ user }: { user: UserProfile | null }) {
   const { toggleTheme } = useTheme();
   const pathname = usePathname();
   const title = adminTitleMap[pathname] ?? "Admin Dashboard";
+
+  const profileImg = user?.profileImage || "/images/people.png";
+  const initials = user?.name ? user.name.substring(0, 2).toUpperCase() : "MR";
 
   return (
     <header className="sticky top-0 z-30 border-b border-white/70 bg-white/55 dark:border-[#333] backdrop-blur-xl dark:bg-[#333]">
@@ -23,7 +25,7 @@ export function AdminTopbar() {
             {title}
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-[#ccc] hidden lg:flex">
-            Welcome back, Michael! Here’s what is happening today.
+            Welcome back , Here’s what is happening today.
           </p>
         </div>
 
@@ -40,12 +42,12 @@ export function AdminTopbar() {
           </Link>
           <Avatar className=" w-11 h-11 sm:h-14 sm:w-14 rounded-full ">
             <AvatarImage
-              className="object-cover"
-              src="/images/hero.png"
-              alt="Profile"
+              className="object-cover dark:bg-[#ccc]"
+              src={profileImg}
+              alt={user?.name || "Profile"}
             />
-            <AvatarFallback className="text-[12px] sm:text-[12px]">
-              MR
+            <AvatarFallback className="text-[12px] sm:text-[12px] uppercase">
+              {initials}
             </AvatarFallback>
           </Avatar>
         </div>

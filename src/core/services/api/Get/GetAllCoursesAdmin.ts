@@ -69,6 +69,7 @@ export interface AdminCourse {
   rating: number;
   status: "Published" | "Draft";
   image: string | null;
+  createdAt: string;
 }
 
 export interface CoursesPageData {
@@ -109,6 +110,7 @@ function toAdminCourse(raw: ApiCourse): AdminCourse {
     rating: raw.rating,
     status: "Published",
     image: raw.courseImage ?? "/images/ImageUn.png",
+    createdAt: raw.createdAt,
   };
 }
 
