@@ -1,8 +1,7 @@
 "use client";
 
-import { ToastContainer } from "sonner";
-import "sonner/dist/ReactToastify.css";
+import { Toaster } from "sonner";
 
 export default function ToastProvider() {
-  return <ToastContainer position="top-center" autoClose={3000} />;
+  return <Toaster richColors position="top-right" />;
 }
