@@ -72,13 +72,13 @@ export function UserManagementDesktopTable({
             users.map((user) => (
               <tr key={user.id} className="border-b border-slate-100">
                 <td className="px-4 py-4">
-                  <div className="flex items-center gap-3">
+                  <div className=" rounded-full flex items-center gap-3">
                     <Image
                       src={user.profileImage ?? "/images/people.png"}
                       alt={user.name}
                       width={36}
                       height={36}
-                      className="rounded-full object-cover shrink-0 border border-slate-200 dark:border-[#555] dark:bg-[#ccc]"
+                      className="w-9 h-9 rounded-full object-cover shrink-0 border border-slate-200 dark:border-[#555] dark:bg-[#ccc]"
                     />
                     <span className="font-medium dark:text-[white]">
                       {user.name}

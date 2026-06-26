@@ -8,9 +8,22 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { adminNavItems, logoutNavItem } from "../utils/nav";
 import AdminProfileModal from "./AdminProfileModal";
+import type { UserProfile } from "@/core/services/api/Get/GetUserInfoAdmin";
+import { useState } from "react";
 
-function NavList({ mobile = false }: { mobile?: boolean }) {
+function NavList({
+  mobile = false,
+  user,
+  onNavigate,
+}: {
+  mobile?: boolean;
+  user: UserProfile | null;
+  onNavigate?: () => void;
+}) {
   const pathname = usePathname();
+  const displayName = user?.name || "Admin User";
+  const displayRole = user?.role?.join(" , ") || "Admin";
+  const initials = displayName.substring(0, 2).toUpperCase();
 
   return (
     <div className="flex h-full flex-col ">
@@ -32,7 +45,7 @@ function NavList({ mobile = false }: { mobile?: boolean }) {
         {adminNavItems.map((item) => {
           const active =
             item.href === "/panels/admin"
-              ? pathname === "/admin"
+              ? pathname === "/panels/admin"
               : pathname.startsWith(item.href);
 
           const Icon = item.icon;
@@ -41,6 +54,7 @@ function NavList({ mobile = false }: { mobile?: boolean }) {
             <Link
               key={item.href}
               href={item.href}
+              onClick={() => onNavigate?.()}
               className={cn(
                 "group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition-all",
                 active
@@ -62,19 +76,17 @@ function NavList({ mobile = false }: { mobile?: boolean }) {
         <div className="mb-4 rounded-3xl border border-white/70 bg-white/80 p-3 shadow-sm backdrop-blur dark:bg-[#454545]">
           <div className="flex items-center gap-3">
             <AdminProfileModal
-              name="Michael Robertson"
-              role="Admin"
-              initials="MR"
-              imageSrc="/images/hero.png"
-              uploadUrl="/api/admin/profile/photo"
-              deleteUrl="/api/admin/profile/photo"
+              name={displayName}
+              role={displayRole}
+              initials={initials}
+              imageSrc={user?.profileImage || null}
             />
             <div className="min-w-0">
               <div className="truncate text-sm font-semibold dark:text-[white]">
-                Michael Robertson
+                {displayName}
               </div>
               <div className="text-xs text-slate-500 dark:text-[#ccc]">
-                Admin
+                {displayRole}
               </div>
             </div>
           </div>
@@ -95,18 +107,20 @@ function NavList({ mobile = false }: { mobile?: boolean }) {
   );
 }
 
-function DesktopSidebar() {
+function DesktopSidebar({ user }: { user: UserProfile | null }) {
   return (
     <aside className="fixed inset-y-0 left-0 hidden w-72 border-r border-white/70 bg-white/55 dark:border-[#333] px-4 py-5 shadow-[0_10px_40px_rgba(124,58,237,0.08)] backdrop-blur-xl lg:block dark:bg-[#333]">
-      <NavList />
+      <NavList user={user} />
     </aside>
   );
 }
 
-export function MobileSidebar() {
+export function MobileSidebar({ user }: { user: UserProfile | null }) {
+  const [open, setOpen] = useState(false);
+
   return (
     <div className="lg:hidden ">
-      <Sheet>
+      <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <Button
             variant="ghost"
@@ -118,22 +132,19 @@ export function MobileSidebar() {
         </SheetTrigger>
         <SheetContent
           side="left"
-          className="w-[88vw] max-w-[240px] sm:max-w-[320px] bg-white/95 p-4 z-[100] dark:bg-[#333]"
+          className="w-[88vw] max-w-[280px] sm:max-w-[320px] bg-white/100 p-4 z-[100] dark:bg-[#333]"
         >
-          <NavList mobile />
+          <NavList mobile user={user} onNavigate={() => setOpen(false)} />
         </SheetContent>
       </Sheet>
     </div>
   );
 }
 
-export function AdminSidebar() {
+export function AdminSidebar({ user }: { user: UserProfile | null }) {
   return (
     <>
-      <DesktopSidebar />
-      <div className="fixed left-4 top-5.5 sm:top-7 z-50 lg:hidden">
-        <MobileSidebar />
-      </div>
+      <DesktopSidebar user={user} />
     </>
   );
 }

@@ -35,8 +35,6 @@ import { AllPaymentModal } from "./sales-reports/modals/allPaymentModal";
 import { useState, useCallback, useRef, useTransition } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Lottie from "lottie-react";
-import Empty from "@/assets/Lottie/Empty.json";
-import Image from "next/image";
 import {
   AreaChart,
   Area,
@@ -47,6 +45,9 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import loading from "@/assets/Lottie/Loader.json";
+
+import { DashboardDesktop } from "./dashboard-desktop";
+import { DashboardMobile } from "./dashboard-mobile";
 
 type Props = {
   reports: AdminReportData;
@@ -194,8 +195,8 @@ export function AdminDashboard({
 
   return (
     <>
-      <div className="space-y-6 ">
-        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 ">
+      <div className="space-y-6">
+        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {statsList.map((item, index) => (
             <motion.div
               key={item.title}
@@ -249,10 +250,10 @@ export function AdminDashboard({
           ))}
         </section>
 
-        <section className="2xl:grid gap-6 2xl:grid-cols-12 ">
+        <section className="2xl:grid gap-6 2xl:grid-cols-12">
           <Card
             ref={tableTopRef}
-            className="  xl:col-span-8 mb-5 2xl:mb-0 rounded-3xl border-white/70 bg-white/80 shadow-sm backdrop-blur dark:bg-[#333]"
+            className="xl:col-span-8 mb-5 2xl:mb-0 rounded-3xl border-white/70 bg-white/80 shadow-sm backdrop-blur dark:bg-[#333]"
           >
             <CardHeader className="flex flex-col gap-4 py-7 lg:flex-row lg:items-center lg:justify-between">
               <CardTitle className="text-xl text-center md:text-start w-full">
@@ -325,184 +326,8 @@ export function AdminDashboard({
                 </div>
               </div>
 
-              <div className="hidden overflow-x-auto md:block">
-                <table className="min-w-full text-left text-sm">
-                  <thead className="border-y border-slate-200/80 bg-slate-50/70 text-slate-500 dark:bg-[#454545]">
-                    <tr>
-                      <th className="w-[350px] px-10 py-4 font-medium dark:text-[#ccc]">
-                        Course
-                      </th>
-
-                      <th className="px-6 py-4 font-medium dark:text-[#ccc]">
-                        Teacher
-                      </th>
-
-                      <th className="px-6 py-4 font-medium dark:text-[#ccc]">
-                        Category
-                      </th>
-
-                      <th className="px-6 py-4 font-medium dark:text-[#ccc]">
-                        Price
-                      </th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {coursesData.courses.length === 0 ? (
-                      <tr>
-                        <td
-                          colSpan={4}
-                          className="pt-10 pb-10 text-slate-500 dark:text-[#aaa]"
-                        >
-                          <div className="flex flex-col items-center justify-center gap-10">
-                            <Lottie
-                              style={{ width: 200, height: 200 }}
-                              animationData={Empty}
-                            />
-                            <p>No courses found</p>
-                          </div>
-                        </td>
-                      </tr>
-                    ) : (
-                      coursesData.courses.map((course) => (
-                        <tr
-                          key={course.id}
-                          className="border-b border-slate-100 dark:border-[#444]"
-                        >
-                          <td className="px-6 py-4 flex items-center gap-3">
-                            {course.image ? (
-                              <Link href={`/courses/${course.id}`}>
-                                <Image
-                                  src={course.image}
-                                  alt={course.title}
-                                  width={112}
-                                  height={64}
-                                  className="h-16 w-28 rounded-xl object-cover shrink-0 dark:bg-[#ccc] transition-all duration-300  hover:shadow-lg"
-                                />
-                              </Link>
-                            ) : (
-                              <div className="h-16 w-28 rounded-xl bg-gradient-to-br from-slate-200 to-slate-300 shrink-0" />
-                            )}
-                            <Link
-                              href={`/courses/${course.id}`}
-                              className="font-semibold text-slate-900 dark:text-white line-clamp-2 hover:!text-violet-400 transition-colors"
-                            >
-                              {course.title}
-                            </Link>
-                          </td>
-
-                          <td className="px-6 py-4">
-                            <div className="font-medium text-slate-700 dark:text-[#ccc]">
-                              {course.instructor}
-                            </div>
-                          </td>
-
-                          <td className="px-6 py-4 text-slate-700 dark:text-[#ccc]">
-                            {course.category}
-                          </td>
-
-                          <td className="px-6 py-4">
-                            <Badge
-                              className="
-                              rounded-full
-                              bg-violet-100
-                              text-violet-700
-                              px-3.5
-                              py-1
-                              font-semibold
-                              shadow-sm
-                              dark:bg-violet-500/15
-                              dark:text-violet-300
-                            "
-                            >
-                              ${course.price}
-                            </Badge>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="space-y-4 px-6 pb-4 md:hidden">
-                {coursesData.courses.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center gap-10 pt-10 pb-20 text-slate-500 dark:text-[#aaa]">
-                    <Lottie
-                      style={{ width: 200, height: 200 }}
-                      animationData={Empty}
-                    />
-                    <p>No courses found</p>
-                  </div>
-                ) : (
-                  coursesData.courses.map((course) => (
-                    <div
-                      key={course.id}
-                      className="rounded-3xl border border-slate-200/70 bg-white/70 p-4 shadow-sm backdrop-blur dark:border-[#444] dark:bg-[#3a3a3a]"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex w-full gap-3">
-                          {course.image ? (
-                            <Link href={`/courses/${course.id}`}>
-                              <Image
-                                src={course.image ?? "/images/people.png"}
-                                alt={course.title}
-                                width={112}
-                                height={64}
-                                className="h-16 w-28 rounded-xl object-cover shrink-0 dark:bg-[#ccc]"
-                              />
-                            </Link>
-                          ) : (
-                            <div className="h-16 w-24 shrink-0 rounded-xl bg-gradient-to-br from-slate-200 to-slate-300" />
-                          )}
-
-                          <div className="flex-1">
-                            <Link
-                              href={`/courses/${course.id}`}
-                              className="line-clamp-2 font-semibold text-slate-900 dark:text-white w-20 sm:w-auto"
-                            >
-                              {course.title}
-                            </Link>
-                            <p className="mt-1 text-xs text-slate-500 dark:text-[#898989]">
-                              {course.category}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mt-4 space-y-3">
-                        <div>
-                          <p className="text-sm text-[black] dark:text-[white]">
-                            Teacher : {course.instructor}
-                          </p>
-                        </div>
-
-                        <div className="flex flex-wrap items-center gap-2">
-                          <Badge
-                            className="
-                              rounded-full
-                              bg-violet-100
-                              text-violet-700
-                              px-3.5
-                              py-1
-                              font-semibold
-                              shadow-sm
-                              dark:bg-violet-500/15
-                              dark:text-violet-300
-                            "
-                          >
-                            ${course.price}
-                          </Badge>
-
-                          <Badge variant="secondary" className="rounded-full">
-                            {course.level}
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
+              <DashboardDesktop coursesData={coursesData} />
+              <DashboardMobile coursesData={coursesData} />
 
               {coursesData.meta.pages > 1 && (
                 <PaginationComp
@@ -514,7 +339,7 @@ export function AdminDashboard({
             </CardContent>
           </Card>
 
-          <div className="xl:col-span-4 space-y-6 ">
+          <div className="xl:col-span-4 space-y-6">
             <Card className="rounded-3xl border-white/70 bg-white/80 shadow-sm backdrop-blur dark:bg-[#333] py-5">
               <CardHeader className="flex-row items-center justify-center">
                 <CardTitle className="text-xl text-center mb-3">
@@ -566,7 +391,7 @@ export function AdminDashboard({
                 <Link href="/panels/admin/user-management">
                   <Button
                     variant="outline"
-                    className="w-[97%] flex items-center py-1 justify-center mt-4  mx-auto cursor-pointer rounded-2xl border-violet-600 text-violet-600 hover:text-violet-600 hover:bg-violet-50 dark:border-violet-500 dark:text-violet-400 dark:hover:bg-violet-500/10"
+                    className="w-[97%] flex items-center py-1 justify-center mt-4 mx-auto cursor-pointer rounded-2xl border-violet-600 text-violet-600 hover:text-violet-600 hover:bg-violet-50 dark:border-violet-500 dark:text-violet-400 dark:hover:bg-violet-500/10"
                   >
                     <Users className="mr-1 h-4 w-4" />
                     View All User
@@ -580,7 +405,7 @@ export function AdminDashboard({
                 <CardTitle>Sales Overview</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="mb-4 mt-2 flex flex-col items-start justify-between ">
+                <div className="mb-4 mt-2 flex flex-col items-start justify-between">
                   <div>
                     <div className="text-3xl font-semibold tracking-tight dark:text-white">
                       ${revMetric?.value?.toLocaleString() || "0"}
@@ -589,7 +414,7 @@ export function AdminDashboard({
                       Last {salesOverviewData?.period || 7} days revenue
                     </div>
                   </div>
-                  <div className="flex gap-2 mt-5 ">
+                  <div className="flex gap-2 mt-5">
                     {revMetric && (
                       <Badge
                         className={cn(
@@ -739,7 +564,7 @@ export function AdminDashboard({
                 <Button
                   onClick={handleOpenPaymentModal}
                   variant="outline"
-                  className="w-[90%] flex items-center justify-center mt-4  mx-auto cursor-pointer rounded-2xl border-violet-600 text-violet-600 hover:text-violet-600 hover:bg-violet-50 dark:border-violet-500 dark:text-violet-400 dark:hover:bg-violet-500/10"
+                  className="w-[90%] flex items-center justify-center mt-4 mx-auto cursor-pointer rounded-2xl border-violet-600 text-violet-600 hover:text-violet-600 hover:bg-violet-50 dark:border-violet-500 dark:text-violet-400 dark:hover:bg-violet-500/10"
                 >
                   <DollarSign className="mr-1 h-4 w-4" />
                   View All Payments

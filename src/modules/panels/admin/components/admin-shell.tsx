@@ -4,13 +4,20 @@ import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { AdminSidebar } from "./admin-sidebar";
 import { AdminTopbar } from "./admin-topbar";
+import type { UserProfile } from "@/core/services/api/Get/GetUserInfoAdmin";
 
-export function AdminShell({ children }: { children: ReactNode }) {
+export function AdminShell({
+  children,
+  user,
+}: {
+  children: ReactNode;
+  user: UserProfile | null;
+}) {
   return (
-    <div className="min-h-screen !dark:bg-[red] bg-gradient-to-br from-[#fbf8ff] via-[#f8f4ff] to-[#f4efff] text-slate-900 overflow-x-hidden ">
-      <AdminSidebar />
+    <div className="min-h-screen dark:bg-none dark:!bg-[#1e1e1e] bg-gradient-to-br from-[#fbf8ff] via-[#f8f4ff] to-[#f4efff] text-slate-900 overflow-x-hidden ">
+      <AdminSidebar user={user} />
       <div className="lg:pl-72">
-        <AdminTopbar />
+        <AdminTopbar user={user} />
         <motion.main
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}

@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { AdminUser, ApiMeta } from "@/core/services/api/Get/GetAllUser";
 import { PaginationComp } from "@/components/PaginationComp";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useTransition, useCallback } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { DeleteUserModal } from "./modals/deleteUserModal";
 import { UserEditRoleModal } from "./modals/userEditRoleModal";
@@ -30,6 +30,8 @@ import { UserViewModal } from "./modals/userViewModal";
 import { UserManagementDesktopTable } from "./user-management-desktop";
 import { UserManagementMobileCards } from "./user-management-mobile";
 import { UpdateUserInfoModal } from "./modals/updateUserModal";
+import loading from "@/assets/Lottie/Loader.json";
+import Lottie from "lottie-react";
 
 export function useUserById(userId: string | null) {
   return useQuery<UserByIdApiData>({
@@ -68,6 +70,8 @@ export function UserManagement({ users, meta }: UserManagementProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
+  const tableTopRef = useRef<HTMLDivElement>(null);
 
   const searchParamsRef = useRef(searchParams);
   useEffect(() => {
@@ -93,11 +97,14 @@ export function UserManagement({ users, meta }: UserManagementProps) {
         ? params.set("search", searchValue.trim())
         : params.delete("search");
       params.set("page", "1");
-      router.replace(`${pathname}?${params.toString()}`);
+
+      startTransition(() => {
+        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      });
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [searchValue, router, pathname]);
+  }, [searchValue, router, pathname, startTransition]);
 
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -121,8 +128,27 @@ export function UserManagement({ users, meta }: UserManagementProps) {
       ? params.delete("role")
       : params.set("role", TAB_TO_ROLE[value] ?? "");
     params.set("page", "1");
-    router.push(`${pathname}?${params.toString()}`);
+    startTransition(() => {
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    });
   };
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      tableTopRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+
+      const params = new URLSearchParams(searchParamsRef.current.toString());
+      params.set("page", page.toString());
+
+      startTransition(() => {
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+      });
+    },
+    [pathname, router, startTransition],
+  );
 
   const handleEditRoleClick = (user: AdminUser) => {
     setSelectedRoleUser({ id: user.id, name: user.name, roles: user.roles });
@@ -144,159 +170,179 @@ export function UserManagement({ users, meta }: UserManagementProps) {
   };
 
   return (
-    <TooltipProvider>
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="space-y-6"
-      >
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between ">
-          <div>
-            <h2 className="text-2xl font-semibold tracking-tight dark:text-[white]">
-              User Management
-            </h2>
-            <p className="mt-1 text-sm text-slate-500 dark:text-[#ccc]">
-              Track users, roles, and account status.
-            </p>
-          </div>
-
-          <div>
-            <Button
-              onClick={() => setIsCreateUserModalOpen(true)}
-              className=" cursor-pointer rounded-2xl bg-violet-600 hover:bg-violet-700 w-full  sm:w-auto"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Create New User
-            </Button>
-          </div>
-        </div>
-
-        <Card className="rounded-3xl border-white/70 bg-white/80 shadow-sm backdrop-blur dark:bg-[#333]">
-          <CardHeader className="flex flex-col gap-4 pt-6 pb-3 xl:pb-10 md:flex-row md:items-center md:justify-between">
-            <Tabs value={activeTab} onValueChange={handleTabChange}>
-              <TabsList className="rounded-2xl bg-slate-100 w-full 2xl:w-auto overflow-x-auto sm:overflow-x-hidden overflow-y-hidden dark:!bg-[#454545]">
-                <TabsTrigger
-                  value="all"
-                  className="rounded-xl !text-[12px] sm:!text-sm md:!text-xs lg:!text-xs xl:!text-sm !cursor-pointer"
-                >
-                  All Users
-                </TabsTrigger>
-                <TabsTrigger
-                  value="students"
-                  className="rounded-xl !text-[12px] sm:!text-sm md:!text-xs lg:!text-xs xl:!text-sm !cursor-pointer"
-                >
-                  Students
-                </TabsTrigger>
-                <TabsTrigger
-                  value="teachers"
-                  className="rounded-xl !text-[12px] sm:!text-sm md:!text-xs lg:!text-xs xl:!text-sm !cursor-pointer"
-                >
-                  Teachers
-                </TabsTrigger>
-                <TabsTrigger
-                  value="admins"
-                  className="rounded-xl !text-[12px] sm:!text-sm md:!text-xs lg:!text-xs xl:!text-sm !cursor-pointer"
-                >
-                  Admins
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-
-            <div className="relative w-full md:max-w-xl">
-              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-              <Input
-                placeholder="Search users..."
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                className="h-10 2xl:h-11 rounded-2xl pl-10"
-              />
+    <>
+      <TooltipProvider>
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-6"
+        >
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between ">
+            <div>
+              <h2 className="text-2xl font-semibold tracking-tight dark:text-[white]">
+                User Management
+              </h2>
+              <p className="mt-1 text-sm text-slate-500 dark:text-[#ccc]">
+                Track users, roles, and account status.
+              </p>
             </div>
-          </CardHeader>
 
-          <CardContent className="space-y-4">
-            <UserManagementDesktopTable
-              users={users}
-              roleIconMap={roleIconMap}
-              onViewProfile={handleViewProfile}
-              onEditRole={handleEditRoleClick}
-              onEditUser={handleUserEditClick}
-              onBlockUser={handleDeleteClick}
+            <div>
+              <Button
+                onClick={() => setIsCreateUserModalOpen(true)}
+                className=" cursor-pointer rounded-2xl bg-violet-600 hover:bg-violet-700 w-full  sm:w-auto"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Create New User
+              </Button>
+            </div>
+          </div>
+
+          <Card
+            ref={tableTopRef}
+            className="rounded-3xl border-white/70 bg-white/80 shadow-sm backdrop-blur dark:bg-[#333]"
+          >
+            <CardHeader className="flex flex-col gap-4 pt-6 pb-3 xl:pb-10 md:flex-row md:items-center md:justify-between">
+              <Tabs value={activeTab} onValueChange={handleTabChange}>
+                <TabsList className="rounded-2xl bg-slate-100 w-full 2xl:w-auto overflow-x-auto sm:overflow-x-hidden overflow-y-hidden dark:!bg-[#454545]">
+                  <TabsTrigger
+                    value="all"
+                    className="rounded-xl !text-[12px] sm:!text-sm md:!text-xs lg:!text-xs xl:!text-sm !cursor-pointer"
+                  >
+                    All Users
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="students"
+                    className="rounded-xl !text-[12px] sm:!text-sm md:!text-xs lg:!text-xs xl:!text-sm !cursor-pointer"
+                  >
+                    Students
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="teachers"
+                    className="rounded-xl !text-[12px] sm:!text-sm md:!text-xs lg:!text-xs xl:!text-sm !cursor-pointer"
+                  >
+                    Teachers
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="admins"
+                    className="rounded-xl !text-[12px] sm:!text-sm md:!text-xs lg:!text-xs xl:!text-sm !cursor-pointer"
+                  >
+                    Admins
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+
+              <div className="relative w-full md:max-w-xl">
+                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <Input
+                  placeholder="Search users..."
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  className="h-10 2xl:h-11 rounded-2xl pl-10"
+                />
+              </div>
+            </CardHeader>
+
+            <CardContent className="space-y-4">
+              <UserManagementDesktopTable
+                users={users}
+                roleIconMap={roleIconMap}
+                onViewProfile={handleViewProfile}
+                onEditRole={handleEditRoleClick}
+                onEditUser={handleUserEditClick}
+                onBlockUser={handleDeleteClick}
+              />
+
+              <UserManagementMobileCards
+                users={users}
+                roleIconMap={roleIconMap}
+                onViewProfile={handleViewProfile}
+                onEditRole={handleEditRoleClick}
+                onEditUser={handleUserEditClick}
+                onBlockUser={handleDeleteClick}
+              />
+            </CardContent>
+
+            <PaginationComp
+              onPageChange={handlePageChange}
+              currentPage={meta.page}
+              totalPages={meta.pages}
             />
+          </Card>
 
-            <UserManagementMobileCards
-              users={users}
-              roleIconMap={roleIconMap}
-              onViewProfile={handleViewProfile}
-              onEditRole={handleEditRoleClick}
-              onEditUser={handleUserEditClick}
-              onBlockUser={handleDeleteClick}
-            />
-          </CardContent>
+          <DeleteUserModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => {
+              setIsDeleteModalOpen(false);
+              setSelectedUser(null);
+            }}
+            userId={selectedUser?.id ?? null}
+            userName={selectedUser?.name || ""}
+          />
+          <UserViewModal
+            isOpen={isViewModalOpen}
+            isLoading={isLoading}
+            onClose={() => {
+              setIsViewModalOpen(false);
+              setSelectedUserId(null);
+            }}
+            userData={userData ?? null}
+          />
+          <UserEditRoleModal
+            isOpen={isEditRoleModalOpen}
+            onClose={() => {
+              setIsEditRoleModalOpen(false);
+              setSelectedRoleUser(null);
+            }}
+            user={selectedRoleUser}
+            onUpdate={() => {
+              setIsEditRoleModalOpen(false);
+              setSelectedRoleUser(null);
+            }}
+          />
+          <CreateUserModal
+            isOpen={isCreateUserModalOpen}
+            onClose={() => setIsCreateUserModalOpen(false)}
+          />
+          <UpdateUserInfoModal
+            isOpen={isUpdateModalOpen}
+            onClose={() => {
+              setIsUpdateModalOpen(false);
+              setSelectedUser(null);
+            }}
+            userId={selectedUser?.id ?? null}
+            initialData={
+              selectedUser
+                ? {
+                    name: selectedUser.name,
+                    email: selectedUser.email,
+                    phoneNumber:
+                      (selectedUser as { phoneNumber?: string | null })
+                        .phoneNumber ??
+                      (selectedUser as { phonenumber?: string | null })
+                        .phonenumber ??
+                      "",
+                    gender: selectedUser.gender ?? "",
+                    birthday: selectedUser.birthday ?? "",
+                    about: selectedUser.about ?? "",
+                    profileImage: selectedUser.profileImage ?? null,
+                  }
+                : null
+            }
+          />
+        </motion.div>
+      </TooltipProvider>
 
-          <PaginationComp currentPage={meta.page} totalPages={meta.pages} />
-        </Card>
-
-        <DeleteUserModal
-          isOpen={isDeleteModalOpen}
-          onClose={() => {
-            setIsDeleteModalOpen(false);
-            setSelectedUser(null);
-          }}
-          userId={selectedUser?.id ?? null}
-          userName={selectedUser?.name || ""}
-        />
-        <UserViewModal
-          isOpen={isViewModalOpen}
-          isLoading={isLoading}
-          onClose={() => {
-            setIsViewModalOpen(false);
-            setSelectedUserId(null);
-          }}
-          userData={userData ?? null}
-        />
-        <UserEditRoleModal
-          isOpen={isEditRoleModalOpen}
-          onClose={() => {
-            setIsEditRoleModalOpen(false);
-            setSelectedRoleUser(null);
-          }}
-          user={selectedRoleUser}
-          onUpdate={() => {
-            setIsEditRoleModalOpen(false);
-            setSelectedRoleUser(null);
-          }}
-        />
-        <CreateUserModal
-          isOpen={isCreateUserModalOpen}
-          onClose={() => setIsCreateUserModalOpen(false)}
-        />
-        <UpdateUserInfoModal
-          isOpen={isUpdateModalOpen}
-          onClose={() => {
-            setIsUpdateModalOpen(false);
-            setSelectedUser(null);
-          }}
-          userId={selectedUser?.id ?? null}
-          initialData={
-            selectedUser
-              ? {
-                  name: selectedUser.name,
-                  email: selectedUser.email,
-                  phoneNumber:
-                    (selectedUser as { phoneNumber?: string | null })
-                      .phoneNumber ??
-                    (selectedUser as { phonenumber?: string | null })
-                      .phonenumber ??
-                    "",
-                  gender: selectedUser.gender ?? "",
-                  birthday: selectedUser.birthday ?? "",
-                  about: selectedUser.about ?? "",
-                  profileImage: selectedUser.profileImage ?? null,
-                }
-              : null
-          }
-        />
-      </motion.div>
-    </TooltipProvider>
+      {isPending && (
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white/40 backdrop-blur-md dark:bg-[#111]/60 transition-all">
+          <div className="h-48 w-48">
+            <Lottie animationData={loading} loop />
+          </div>
+          <p className="ml-3 animate-pulse text-sm font-semibold tracking-widest text-violet-600 dark:text-violet-400">
+            LOADING ...
+          </p>
+        </div>
+      )}
+    </>
   );
 }

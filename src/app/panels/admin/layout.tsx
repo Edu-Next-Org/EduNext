@@ -1,11 +1,18 @@
 import type { ReactNode } from "react";
 import { AdminShell } from "@/modules/panels/admin/components/admin-shell";
+import { getUserInfoAdmin } from "@/core/services/api/Get/GetUserInfoAdmin";
 
 export const metadata = {
-  title: "EduNext | Admin",
+  title: "Admin",
   description: "EduNext admin panel",
 };
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
-  return <AdminShell>{children}</AdminShell>;
+export default async function AdminLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const user = await getUserInfoAdmin();
+
+  return <AdminShell user={user}>{children}</AdminShell>;
 }

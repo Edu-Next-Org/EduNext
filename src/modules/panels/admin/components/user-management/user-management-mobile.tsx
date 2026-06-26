@@ -59,7 +59,7 @@ export function UserManagementMobileCards({
                   alt={user.name}
                   width={42}
                   height={42}
-                  className="rounded-full object-cover shrink-0 border border-slate-200  dark:bg-[#ccc]"
+                  className="w-9 h-9 rounded-full object-cover shrink-0 border border-slate-200  dark:bg-[#ccc]"
                 />
                 <div className="space-y-0.5">
                   <h3 className="font-semibold dark:text-white">{user.name}</h3>

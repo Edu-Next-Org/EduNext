@@ -13,7 +13,9 @@ export interface ICategoriesData {
 
 export const GetAllCategories = async (): Promise<ICategoriesResponse> => {
   const isServer = typeof window === "undefined";
-  const API_BASE = isServer ? "https://edunext-api.onrender.com/api" : "/api";
+  const API_BASE = isServer
+    ? "https://edunext-api-docker.onrender.com/api"
+    : "/api";
 
   const res = await fetch(`${API_BASE}/categories`, {
     next: { revalidate: 60 },

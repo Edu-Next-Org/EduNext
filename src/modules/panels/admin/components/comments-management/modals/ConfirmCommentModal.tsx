@@ -8,18 +8,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Loader2 } from "lucide-react";
 
 interface ConfirmCommentModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  isPending?: boolean;
 }
 
 export function ConfirmCommentModal({
   isOpen,
   onClose,
   onConfirm,
+  isPending = false,
 }: ConfirmCommentModalProps) {
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
@@ -36,18 +38,31 @@ export function ConfirmCommentModal({
             will be visible publicly on the course page.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter className="sm:justify-center flex-row gap-3 mt-6">
+        <AlertDialogFooter>
           <AlertDialogCancel
-            className="rounded-2xl mt-0 w-full dark:bg-[#444] dark:text-white dark:border-none dark:hover:bg-[#555]"
+            className="rounded-2xl cursor-pointer"
             onClick={onClose}
+            disabled={isPending}
           >
             Cancel
           </AlertDialogCancel>
+
           <AlertDialogAction
-            className="rounded-2xl w-full bg-emerald-600 hover:bg-emerald-700 text-white"
-            onClick={onConfirm}
+            className=" cursor-pointer rounded-2xl bg-emerald-600 hover:!bg-emerald-700 text-white flex items-center justify-center disabled:opacity-70"
+            onClick={(e) => {
+              e.preventDefault();
+              onConfirm();
+            }}
+            disabled={isPending}
           >
-            Yes, Confirm
+            {isPending ? (
+              <>
+                <Loader2 className=" h-4 w-4 animate-spin" />
+                Confirming...
+              </>
+            ) : (
+              "Yes, Confirm"
+            )}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
