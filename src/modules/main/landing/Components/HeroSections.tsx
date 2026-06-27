@@ -70,6 +70,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import HeroCount from "./HeroCount";
+import Container from "@/components/container/Container";
 
 function HeroSection() {
   const shouldReduceMotion = useReducedMotion();
@@ -124,7 +125,7 @@ function HeroSection() {
       />
 
       <section className="relative min-h-[80vh] lg:min-h-[92vh] flex items-center">
-        <div className="mx-auto w-full max-w-7xl px-6 lg:px-10 py-16 ">
+        <div className=" w-full  lg:px-20 px-6 py-8 md:py-16 ">
           <div className="grid items-center gap-14 lg:grid-cols-2">
             <motion.div
               className="relative z-10 max-w-xl"

@@ -1,4 +1,3 @@
-import React from "react";
 import HeroSection from "../Components/HeroSections";
 import TopCourses from "../Components/TopCourses";
 import WhyUsSection from "../Components/WhyUsSection";

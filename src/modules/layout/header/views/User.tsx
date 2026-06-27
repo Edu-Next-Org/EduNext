@@ -27,7 +27,6 @@ import { useState } from "react";
 import { LogoutDialog } from "@/components/LogOutDialog";
 import { useRouter } from "next/navigation";
 import { logOut } from "../services";
-import { toast } from "sonner";
 
 interface UserMenuProps {
   user: IUser;
@@ -178,10 +177,7 @@ export function UserMenu({ user }: UserMenuProps) {
         open={openLogOutModal}
         onOpenChange={onChangeOpen}
         onConfirm={() => {
-          logOut();
-          router.push("/");
-          router.refresh();
-          toast.success("Log out successfully");
+          logOut(router);
         }}
       />
     </DropdownMenu>

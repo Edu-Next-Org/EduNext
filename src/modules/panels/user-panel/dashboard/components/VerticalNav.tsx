@@ -88,7 +88,7 @@ function VerticalNav() {
         open={logOutModal}
         onOpenChange={onChangeModal}
         onConfirm={() => {
-          logOut();
+          logOut(router);
           router.push("/");
           router.refresh();
           toast.success("Log out successfully");

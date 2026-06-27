@@ -1,6 +1,6 @@
 "use client";
 import ToggleThem from "@/Utils/helper/ToggleThem";
-import { Menu, X } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
 import { VerticalLinks, VerticalNavLinkType } from "../mock/Links";
@@ -10,6 +10,7 @@ import { AnimatePresence, Variants, motion } from "framer-motion";
 import { LogoutDialog } from "@/components/LogOutDialog";
 import { logOut } from "@/modules/layout/header/services";
 import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export interface IMobileNavProp {
   name: string;
   image: string;
@@ -67,30 +68,41 @@ const MobileNavPanel = ({ name, image }: IMobileNavProp) => {
       <AnimatePresence>
         {openMenu && (
           <>
-            <div
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               onClick={() => setOpenMenu(false)}
-              className="fixed inset-0 bg-[rgba(1,1,1,0.3)] z-40 "
-            ></div>
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+            />
             <motion.div
               variants={menuVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
-              className=" shadow dark:bg-[#1e1e1e] dark:shadow-[0_0_20px_4px_#644DB3] bg-[#ffff]
-       flex flex-col pr-4 rounded-md fixed top-18 right-0 z-50
-     "
+              className="fixed
+top-0
+right-0
+h-screen
+w-[82%]
+max-w-[360px]
+bg-background
+border-l
+shadow-2xl
+flex
+flex-col
+z-50"
             >
               <motion.div
                 variants={itemVariants}
                 className="flex items-center gap-2 py-4 pl-4"
               >
-                <Image
-                  src={image || "/images/NoImage.png"}
-                  width={32}
-                  height={32}
-                  alt={name || ""}
-                  className="rounded-full object-cover border "
-                />
+                <Avatar className="h-10 w-10 border-2 border-primary/20">
+                  <AvatarImage src={image || undefined} alt={name} />
+                  <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                    {name.charAt(0).toLocaleUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
                 <h2 className="text-[18px] font-medium ">
                   {name || "no Name"}
                 </h2>
@@ -100,10 +112,11 @@ const MobileNavPanel = ({ name, image }: IMobileNavProp) => {
                   key={i}
                   href={item.link}
                   onClick={() => setOpenMenu(false)}
-                  className={`pl-5  py-4 transition-all duration-150 ease-in-out hover:bg-[rgba(61,29,191,0.1)] hover:font-bold rounded-r-md  hover:text-lg ${
-                    item.link == pathName
-                      ? "bg-[rgba(61,29,191,0.2)] hover:bg-[rgba(61,29,191,0.2)] text-[#3d1dbf] border-l-2  border-[#3d1dbf] "
-                      : ""
+                  className={`pl-5  py-4 transition-all
+duration-200 ease-in-out hover:bg-[rgba(61,29,191,0.1)] hover:translate-x-2 hover:font-bold rounded-r-md  ${
+                    item.link === pathName
+                      ? "bg-violet-600 text-white"
+                      : "hover:bg-violet-100 dark:hover:bg-zinc-800"
                   } `}
                 >
                   <motion.span variants={itemVariants}>
@@ -111,22 +124,29 @@ const MobileNavPanel = ({ name, image }: IMobileNavProp) => {
                   </motion.span>
                 </Link>
               ))}
-              <motion.p
-                variants={itemVariants}
+              <button
                 onClick={() => onChangeOpen(true)}
-                className="pl-5 slideUpX py-4 transition-all duration-150 ease-in-out hover:bg-red-600/20
-       hover:font-bold  hover:text-lg rounded-r-md"
+                className="
+
+flex
+items-center
+gap-3
+rounded-xl
+bg-red-500/10
+text-red-500
+px-4
+py-3
+hover:bg-red-500/20
+"
               >
-                Log out
-              </motion.p>
+                <LogOut size={18} />
+                Logout
+              </button>
               <LogoutDialog
                 open={openLogOutModal}
                 onOpenChange={onChangeOpen}
                 onConfirm={() => {
-                  logOut();
-                  router.push("/");
-                  router.refresh();
-                  toast.success("Log out successfully");
+                  logOut(router);
                 }}
               />
             </motion.div>

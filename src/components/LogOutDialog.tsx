@@ -11,6 +11,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { LogOut } from "lucide-react";
+import { Button } from "./ui/button";
 
 interface LogoutDialogProps {
   open: boolean;
@@ -42,7 +43,7 @@ export function LogoutDialog({
           <AlertDialogHeader className="space-y-4">
             <div className="flex justify-center">
               <div className="w-16 h-16 rounded-2xl bg-red-700/30 flex items-center justify-center shadow-sm">
-                <LogOut className="w-8 h-8 text-red-700" strokeWidth={2} />
+                <LogOut className="w-8 h-8 text-white" strokeWidth={2} />
               </div>
             </div>
 
@@ -64,11 +65,12 @@ export function LogoutDialog({
             >
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction
+            <Button
+              variant={"destructive"}
               onClick={handleConfirm}
               disabled={isLoading}
-              className="flex-1 bg-red-700/40 text-red-700 font-semibold
-               rounded-xl h-11 shadow-md hover:shadow-lg transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              className="flex-1 text-white font-semibold
+               rounded-xl h-11 shadow-md transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <span className="flex items-center gap-2">
@@ -81,7 +83,7 @@ export function LogoutDialog({
                   Yes, log out
                 </span>
               )}
-            </AlertDialogAction>
+            </Button>
           </AlertDialogFooter>
         </div>
       </AlertDialogContent>

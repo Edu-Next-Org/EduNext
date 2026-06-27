@@ -37,24 +37,21 @@ function Navbar({ user }: { user?: IUser }) {
   };
   const menuVariants: Variants = {
     hidden: {
-      x: "100%",
-      opacity: 0,
+      x: 400,
     },
     visible: {
       x: 0,
-      opacity: 1,
       transition: {
         type: "spring",
-        stiffness: 120,
-        damping: 20,
-        when: "beforeChildren",
-        staggerChildren: 0.08,
+        stiffness: 140,
+        damping: 22,
       },
     },
     exit: {
-      x: "100%",
-      opacity: 0,
-      transition: { duration: 0.3 },
+      x: 400,
+      transition: {
+        duration: 0.25,
+      },
     },
   };
   const DesktopItemVariants: Variants = {
@@ -128,53 +125,116 @@ function Navbar({ user }: { user?: IUser }) {
                 />
               </div>
             </div>
-            {Open ? <X onClick={handleOpen} /> : <Menu onClick={handleOpen} />}
+            {!Open && (
+              <button
+                onClick={handleOpen}
+                className="
+  h-11
+  w-11
+  rounded-full
+  border
+  bg-background
+  shadow-md
+  flex
+  items-center
+  justify-center
+  active:scale-95
+  transition
+  "
+              >
+                <Menu />
+              </button>
+            )}
           </div>
         </div>
 
         <AnimatePresence>
           {Open && (
             <>
-              <div
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 onClick={() => setOpen(false)}
-                className="fixed inset-0 bg-[rgba(1,1,1,0.3)]  "
-              ></div>
-
+                className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+              />
               <motion.div
                 variants={menuVariants}
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className={`
-    fixed top-18 right-0
-    w-[43%] shadow rounded
-    bg-[#eeee] dark:bg-[#1e1e1e]
-    flex flex-col gap-7
-    px-6 h-[60%]
-    
-    
-  `}
+                className="
+  fixed
+  top-0
+  right-0
+  h-screen
+  w-[82%]
+  max-w-[360px]
+  bg-background
+  border-l
+  shadow-2xl
+  flex
+  flex-col
+  px-6
+  py-6
+  z-50
+"
               >
-                {Links.map((items, index) => (
-                  <motion.span variants={itemVariants} key={index}>
-                    <Link
-                      href={items.link}
-                      className={`border-b border-[#ccc] w-full transition-all duration-150 ease-in-out
-                         hover:font-bold  hover:text-lg  ${
-                           pathName == items.link
-                             ? "font-bold border-b-2 border-b-blue-400 text-lg "
-                             : ""
-                         }   `}
-                    >
-                      {items.title}
-                    </Link>
-                  </motion.span>
-                ))}
-                {!user && (
-                  <motion.div variants={itemVariants}>
-                    <AuthNav />
-                  </motion.div>
-                )}
+                <div className="flex items-center justify-between border-b pb-5">
+                  <div>
+                    <h2 className="text-2xl font-bold">EduNext</h2>
+
+                    <p className="text-sm text-muted-foreground">
+                      Online Learning
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={handleOpen}
+                    className="
+    w-10
+    h-10
+    rounded-full
+    hover:bg-accent
+    flex
+    items-center
+    justify-center
+    "
+                  >
+                    <X />
+                  </button>
+                </div>
+
+                <div className="mt-6 flex flex-col gap-2">
+                  {Links.map((item, index) => (
+                    <motion.div variants={itemVariants} key={index}>
+                      <Link
+                        onClick={() => setOpen(false)}
+                        href={item.link}
+                        className={`
+          flex
+          items-center
+          rounded-xl
+          px-4
+          py-3
+          transition-all
+          duration-200
+
+          ${
+            pathName === item.link
+              ? "bg-violet-600 text-white shadow-lg"
+              : "hover:bg-violet-100 dark:hover:bg-zinc-800"
+          }
+        `}
+                      >
+                        {item.title}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+                <div className="mt-auto border-t pt-6 space-y-4">
+                  {!user && <AuthNav />}
+                </div>
               </motion.div>
             </>
           )}

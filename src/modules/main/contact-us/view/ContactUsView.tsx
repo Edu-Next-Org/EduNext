@@ -34,23 +34,23 @@ export default function ContactUsView() {
           {[
             {
               icon: Mail,
-              title: "Email",
-              value: "support@edunext.com",
+              title: "Email 1",
+              value: "rezakazemi1381@yahoo.com",
+            },
+            {
+              icon: Mail,
+              title: "Email 2",
+              value: "abolfazlmnf83@gmail.com",
             },
             {
               icon: Phone,
               title: "Phone",
-              value: "+98 912 000 0000",
+              value: "+98 911 956 1084",
             },
             {
               icon: MapPin,
               title: "Location",
-              value: "Tehran, Iran",
-            },
-            {
-              icon: Clock,
-              title: "Working Hours",
-              value: "9 AM - 6 PM",
+              value: "Sari, Iran",
             },
           ].map((item) => (
             <div
