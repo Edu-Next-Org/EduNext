@@ -125,9 +125,9 @@ export function MobileSidebar({ user }: { user: UserProfile | null }) {
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8  rounded-2xl border border-white/60 bg-white/100 shadow-sm"
+            className="h-12 w-12  rounded-full border border-white/60 bg-white/100 shadow-sm"
           >
-            <Menu className="h-5 w-5" />
+            <Menu className="!h-5 !w-5" />
           </Button>
         </SheetTrigger>
         <SheetContent

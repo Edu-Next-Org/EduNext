@@ -37,13 +37,13 @@ export function AdminTopbar({ user }: { user: UserProfile | null }) {
             onClick={toggleTheme}
             className="rounded-full flex items-center justify-center cursor-pointer "
           >
-            <Sun className="text-orange-400 hover:text-orange-500 hidden dark:block transition-colors w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9" />
+            <Sun className="text-orange-400 hover:text-orange-500 hidden dark:block transition-colors w-10 h-10 sm:w-8 sm:h-8 lg:w-9 lg:h-9" />
             <Moon className=" block dark:hidden transition-colors text-violet-500 w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 hover:text-violet-700 transition-all duration-100" />
           </div>
           <Link href="/">
-            <Home className="h-7 w-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 dark:text-[#ccc]  text-slate-600 hover:!text-violet-500 transition-all duration-200 cursor-pointer" />
+            <Home className="h-10 w-10 sm:w-8 sm:h-8 lg:w-9 lg:h-9 dark:text-[#ccc]  text-slate-600 hover:!text-violet-500 transition-all duration-200 cursor-pointer" />
           </Link>
-          <Avatar className=" w-11 h-11 sm:h-14 sm:w-14 rounded-full ">
+          <Avatar className=" w-13 h-13 sm:h-14 sm:w-14 rounded-full ">
             <AvatarImage
               className="object-cover dark:bg-[#ccc]"
               src={profileImg}

@@ -107,7 +107,7 @@ export function AllPaymentModal({
                       alt={payment.userName}
                       width={40}
                       height={40}
-                      className="rounded-full shrink-0 object-cover border border-slate-100 dark:border-[#555]"
+                      className="w-10 h-10 dark:bg-[#ccc] rounded-full shrink-0 object-cover border border-slate-100 dark:border-[#555]"
                     />
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-slate-900 dark:text-white truncate text-sm">

@@ -190,7 +190,7 @@ export default function AdminProfileModal({
         <DialogContent
           className={cn(
             "w-[calc(100vw-1rem)] max-w-[560px] overflow-hidden rounded-[28px] border border-white/60 bg-white/95 p-0 shadow-[0_30px_120px_rgba(0,0,0,0.28)] backdrop-blur-xl dark:border-[#444] dark:bg-[#2f2f2f]",
-            "sm:max-w-[620px] md:max-w-[680px] lg:max-w-[720px] xl:max-w-[760px] 2xl:max-w-[820px]",
+            "sm:max-w-[620px] md:max-w-[680px] lg:max-w-[720px] xl:max-w-[760px] 2xl:max-w-[820px] z-[9999] ",
           )}
         >
           <div className="max-h-[92dvh] overflow-y-auto">

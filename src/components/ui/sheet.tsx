@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import { X } from "lucide-react";
 
 interface SheetContextType {
   open: boolean;
@@ -117,6 +118,13 @@ export function SheetContent({
               ${className}
             `}
           >
+            <button
+              onClick={() => setOpen(false)}
+              className="absolute right-4 top-4 z-[1010] rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none"
+            >
+              <X className="h-5 w-5 dark:text-white" />
+              <span className="sr-only">Close</span>
+            </button>
             {children}
           </motion.div>
         </>
