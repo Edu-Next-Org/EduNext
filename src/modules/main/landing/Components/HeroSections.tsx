@@ -218,7 +218,7 @@ function HeroSection() {
                 <div className="relative overflow-hidden rounded-[2rem] border border-white/30 bg-white/50 p-3 shadow-[0_30px_80px_rgba(15,23,42,0.14)] backdrop-blur-xl dark:border-white/10 dark:bg-white/5">
                   <div className="relative aspect-[4.6/4.6] w-full overflow-hidden rounded-[1.5rem] bg-slate-100 dark:bg-slate-900">
                     <Image
-                      src="/images/hero.PNG"
+                      src="/images/reza.JPG"
                       alt="Learn from experts"
                       fill
                       priority

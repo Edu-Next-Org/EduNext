@@ -403,8 +403,8 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         />
 
         {!courseData?.isPurchased && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-gradient-to-b from-black/40 via-black/60 to-black/80 backdrop-blur-lg p-4 sm:p-6">
-            <div className="relative w-full max-w-[90vw] sm:max-w-md overflow-hidden rounded-2xl sm:rounded-3xl border border-white/20 bg-white/10 px-5 py-6 sm:px-8 sm:py-10 text-center shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-black/40 via-black/60 to-black/80 backdrop-blur-lg p-4 sm:p-6">
+            <div className="relative w-full max-w-[90vw]  sm:max-w-md overflow-hidden rounded-2xl sm:rounded-3xl border border-white/20 bg-white/10 px-5 py-6 sm:px-8 sm:py-10 text-center shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
               <div className="absolute -top-16 left-1/2 h-24 w-24 sm:h-32 sm:w-32 -translate-x-1/2 rounded-full bg-primary/30 blur-3xl" />
 
               <div className="relative mx-auto mb-4 sm:mb-6 flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full border border-white/20 bg-white/10">
