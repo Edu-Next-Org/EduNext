@@ -32,7 +32,7 @@ async function MainCourses({ params }: { params: ICourseParams }) {
       </section>
       <div className="flex flex-col gap-2">
         <CoursesSort />
-        <div className="w-full grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-stretch gap-5 mt-4 ">
+        <div className="w-full grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-stretch gap-5 mt-4  min-h-screen ">
           {courses.map((items: ICourseData, i) => (
             <CourseCard course={items} classNames="w-full" key={i} />
           ))}

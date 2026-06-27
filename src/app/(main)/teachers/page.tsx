@@ -1,6 +1,7 @@
 import { TeachersListClient } from "@/modules/main/Teachers/TeachersListClient";
 import { getAllTeachers } from "@/core/services/api/get/getAllTeacher";
 import { metadataGenerator } from "@/Utils/helper/metadata";
+import Container from "@/components/container/Container";
 
 type ApiTeacher = {
   _id: string;
@@ -50,12 +51,12 @@ export default async function TeachersPage({ searchParams }: PageProps) {
   }
 
   return (
-    <div className="container mx-auto py-8 px-8 dark:bg-none dark:bg-[#1e1e1e] bg-[radial-gradient(circle_at_top_left,_#ffffff_0%,_rgba(255,255,255,0)_60%),linear-gradient(180deg,_#FAF7FC_0%,_#F3EEF6_45%,_#ECE6F2_100%)]">
+    <Container>
       <TeachersListClient
         initialTeachers={teachers}
         totalPages={meta.pages}
         currentPage={meta.page}
       />
-    </div>
+    </Container>
   );
 }
