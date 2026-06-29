@@ -2,6 +2,7 @@
 
 import api from "@/core/services/api";
 import { cookies } from "next/headers";
+import axios from "axios";
 
 export interface CommentData {
   course: string;
@@ -16,7 +17,7 @@ export interface CommentData {
 export interface CommentResponse {
   success: boolean;
   message: string;
-  data: CommentData;
+  data?: CommentData;
 }
 
 export interface CommentPayload {
@@ -42,17 +43,19 @@ export async function addCourseComment({
 
     return response.data;
   } catch (error: unknown) {
-    import("axios").then(({ isAxiosError }) => {
-      if (isAxiosError(error)) {
-        throw new Error(
+    console.error("❌ CRASH INSIDE SERVER ACTION:", error);
+    if (axios.isAxiosError(error)) {
+      return {
+        success: false,
+        message:
           error.response?.data?.message ||
-            "Failed to submit comment. Please try again.",
-        );
-      }
-    });
+          "Failed to submit comment. Please try again.",
+      };
+    }
 
-    throw new Error(
-      "An unexpected error occurred while submitting the comment.",
-    );
+    return {
+      success: false,
+      message: "An unexpected error occurred while submitting the comment.",
+    };
   }
 }

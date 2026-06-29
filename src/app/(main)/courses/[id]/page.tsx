@@ -36,6 +36,7 @@ export default async function CoursePage({
   const { id } = await params;
 
   const course = await GetCourseByID(id);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Course",

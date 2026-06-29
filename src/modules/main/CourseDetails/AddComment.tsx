@@ -25,8 +25,28 @@ const validationSchema = Yup.object({
 export default function AddComment({ courseId }: AddCommentProps) {
   const queryClient = useQueryClient();
 
+  // const mutation = useMutation({
+  //   mutationFn: (content: string) => addCourseComment({ courseId, content }),
+  //   onSuccess: (data) => {
+  //     toast.success(data.message || "Comment sent for review!");
+  //     formik.resetForm();
+
+  //     queryClient.invalidateQueries({ queryKey: ["comments", courseId] });
+  //   },
+  //   onError: (error: Error) => {
+  //     toast.error(error.message);
+  //   },
+  // });
   const mutation = useMutation({
-    mutationFn: (content: string) => addCourseComment({ courseId, content }),
+    mutationFn: async (content: string) => {
+      const data = await addCourseComment({ courseId, content });
+
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+
+      return data;
+    },
     onSuccess: (data) => {
       toast.success(data.message || "Comment sent for review!");
       formik.resetForm();
