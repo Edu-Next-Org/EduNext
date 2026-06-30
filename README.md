@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+#  EduNext - Next-Generation Learning Management System
 
-## Getting Started
+![Next.js](https://img.shields.io/badge/Next.js-16.1-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
 
-First, run the development server:
+EduNext is a highly scalable, full-stack Learning Management System (LMS) built with Next.js 16 (App Router) and TypeScript. Designed with a modern SaaS aesthetic, it provides a seamless educational experience from course discovery to automated certification. 
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+ Live Demo: [EduNext on Vercel](https://edu-next-nu.vercel.app/)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+##  Key Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+-  Custom AI Assistant: An intelligent, context-aware chatbot trained on the platform's specific course data to guide users, answer curriculum queries, and recommend courses in real-time.
+-  Smart Course Player & Progress Tracking: Advanced video modules that track user progress accurately, ensuring prerequisites are met before advancing.
+-  Automated Assessment & Certification: A built-in exam engine that unlocks upon course completion. Successful evaluations automatically generate and issue digital certificates.
+-  Advanced Next.js Rendering: Strategic utilization of SSR, SSG, and ISR for lightning-fast page loads and maximum SEO performance.
+-  Enterprise-Grade Security & Auth: Robust authentication flow using NextAuth, with strictly protected routes for Users and Administrators.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+##  Tech Stack & Architecture
 
-## Learn More
+- Core & Architecture: Next.js 16.1 (App Router), TypeScript, Prisma (PostgreSQL Adapter)
+- UI & Styling: Tailwind CSS v4, Shadcn UI, Framer Motion
+- State Management & Data Fetching: TanStack React Query v5, Axios
+- Forms & Validation: Formik, Zod, Yup
 
-To learn more about Next.js, take a look at the following resources:
+##  Application Flow & Routing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- / - SEO-optimized Landing Page
+- /courses & /courses/[id] - Course catalog with dynamic metadata
+- /teachers & /teachers/[id] - Instructor profiles
+- /login & /register - Secure authentication flows
+- /user-panel - Personal dashboard and progress metrics
+- /admin-panel - Platform management and analytics
+- /payment - Secure transaction handling
+- /certificate - Dynamic certificate generation logic
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+##  Getting Started Locally
 
-## Deploy on Vercel
+To run this project on your local machine:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Clone the repository:
+   
+   ```bash
+   git clone https://github.com/AbolfazlMnf/EduNext.git
+   cd EduNext
+   ```
+   
+2. Install dependencies:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```bash
+   npm install
+   ```
+   
+3. Create a `.env.local` file in the root directory and add:
+
+   ```env
+   NEXT_PUBLIC_API_BASE_URL=https://edunext-api-docker.onrender.com/api
+   ```
+   
+4. Run the development server:
+
+   ```bash
+   npm run dev
+   ```
+   
+5. Open your browser and visit:
+
+   ```text
+   http://localhost:3000
+   ```
+   
