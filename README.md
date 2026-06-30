@@ -3,7 +3,7 @@
 ![Next.js](https://img.shields.io/badge/Next.js-16.1-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
+
 
 EduNext is a highly scalable, full-stack Learning Management System (LMS) built with Next.js 16 (App Router) and TypeScript. Designed with a modern SaaS aesthetic, it provides a seamless educational experience from course discovery to automated certification. 
 
@@ -19,7 +19,7 @@ EduNext is a highly scalable, full-stack Learning Management System (LMS) built 
 
 ##  Tech Stack & Architecture
 
-- Core & Architecture: Next.js 16.1 (App Router), TypeScript, Prisma (PostgreSQL Adapter)
+- Core & Architecture: Next.js 16.1 (App Router), TypeScript
 - UI & Styling: Tailwind CSS v4, Shadcn UI, Framer Motion
 - State Management & Data Fetching: TanStack React Query v5, Axios
 - Forms & Validation: Formik, Zod, Yup
