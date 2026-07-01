@@ -52,7 +52,7 @@ export async function GetAllCourses(
       : "";
 
     const res = await fetch(`${API_BASE}/courses${queryString}`, {
-      cache: "no-store",
+      next: { revalidate: 40 },
     });
 
     if (!res.ok) throw new Error(`Status: ${res.status}`);

@@ -1,12 +1,12 @@
-import HeroSection from "../Components/HeroSections";
+import HeroSection, { ILandingData } from "../Components/HeroSections";
 import TopCourses from "../Components/TopCourses";
 import WhyUsSection from "../Components/WhyUsSection";
 import ReadySection from "../Components/ReadySections";
 
-function Landing() {
+function Landing({ data }: { data: ILandingData | null }) {
   return (
     <div>
-      <HeroSection />
+      <HeroSection data={data} />
       <TopCourses />
       <WhyUsSection />
       <ReadySection />

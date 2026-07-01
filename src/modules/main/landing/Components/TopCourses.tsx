@@ -47,10 +47,20 @@ import {
   ICourseData,
   ICourseResult,
 } from "@/core/services/api/get/getAllCourses";
+import { apiFetch } from "@/core/Fetch";
 
 async function TopCourses() {
-  const courses: ICourseResult = await GetAllCourses();
-  const courseData: ICourseData[] = courses?.data || [];
+  const res = await apiFetch<ICourseResult>(`/courses`, {
+    next: { revalidate: 60 * 4 },
+    params: {
+      limit: 3,
+      sort: "latest",
+    },
+  });
+  let courseData = null;
+  if ("data" in res) {
+    courseData = res.data;
+  }
 
   return (
     <section className="relative isolate overflow-hidden bg-[#eeee] dark:bg-[#1e1e1e]">
@@ -79,10 +89,14 @@ async function TopCourses() {
             </Link>
           </div>
 
-          <div className="grid items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {courseData.slice(0, 3).map((item, index) => (
-              <CourseCard course={item} classNames="w-full" key={index} />
-            ))}
+          <div className="grid items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3 w-full ">
+            {courseData && courseData.length > 0 ? (
+              courseData.map((item, index) => (
+                <CourseCard course={item} classNames="w-full" key={index} />
+              ))
+            ) : (
+              <p className="mx-auto text-center font-bold">No Courses</p>
+            )}
           </div>
         </div>
       </div>

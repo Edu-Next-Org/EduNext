@@ -71,7 +71,17 @@ import Image from "next/image";
 import Link from "next/link";
 import HeroCount from "./HeroCount";
 
-function HeroSection() {
+export interface ILandingData {
+  totalCourses: number;
+  totalTeachers: number;
+  totalStudents: number;
+}
+export interface ILandingRes {
+  success: boolean;
+  data: ILandingData;
+}
+
+function HeroSection({ data }: { data: ILandingData | null }) {
   const shouldReduceMotion = useReducedMotion();
 
   const fadeUp: Variants = {
@@ -346,7 +356,7 @@ function HeroSection() {
 
       <div className="relative z-20 px-6 lg:px-20 -mt-10 pb-16 ">
         <div className="mx-auto max-w-5xl rounded-2xl border border-slate-200/60 bg-white/80 mt-5 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-[#0b0b0f]/80">
-          <HeroCount />
+          <HeroCount data={data} />
         </div>
       </div>
     </div>

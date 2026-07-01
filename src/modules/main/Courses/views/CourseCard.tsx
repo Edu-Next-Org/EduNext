@@ -48,7 +48,7 @@ export default function CourseCard({ course, classNames = "" }: props) {
       </div>
 
       <CardContent className="pt-4 pb-3 space-y-3">
-        <h2 className="text-xl font-bold line-clamp-2 leading-tight group-hover:text-primary transition-colors">
+        <h2 className="text-xl truncate font-bold  leading-tight group-hover:text-primary transition-colors">
           {course.title}
         </h2>
 
