@@ -269,7 +269,7 @@ export default function LoginForm() {
             >
               Dont have an account?{" "}
               <Link
-                href="/register"
+                href="/auth/register"
                 className="text-[#644DB3] font-semibold hover:underline"
               >
                 Sign Up
