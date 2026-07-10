@@ -5,6 +5,7 @@ export default function ActivitySection({
 }: {
   activities: string[];
 }) {
+  // activity
   return (
     <Card className="py-4">
       <CardHeader>
