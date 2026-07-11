@@ -234,7 +234,7 @@ export default function LoginForm() {
               variants={itemVariants}
               className="text-start text-[#644DB3] cursor-pointer hover:underline text-sm mb-6"
             >
-              Forgot Password??
+              Forgot Password?
             </motion.p>
 
             <motion.div
