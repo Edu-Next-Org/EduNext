@@ -84,14 +84,29 @@ export default function RegisterForm() {
   const { theme, toggleTheme } = useTheme();
   const router = useRouter();
 
+  // const mutation = useMutation<RegisterResponse, Error, RegisterPayload>({
+  //   mutationFn: registerUser,
+  //   onSuccess: () => {
+  //     toast.success("Account created successfully");
+  //     router.push("/auth/login");
+  //   },
+  //   onError: (error: Error) => {
+  //     toast.error(error.message || "Registration failed");
+  //   },
+  // });
+
   const mutation = useMutation<RegisterResponse, Error, RegisterPayload>({
     mutationFn: registerUser,
-    onSuccess: () => {
-      toast.success("Account created successfully");
-      router.push("/auth/login");
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success("Account created successfully");
+        router.push("/auth/login");
+      } else {
+        toast.error(data.message || "Registration failed");
+      }
     },
-    onError: (error: Error) => {
-      toast.error(error.message || "Registration failed");
+    onError: (error) => {
+      toast.error(error.message || "An unexpected error occurred");
     },
   });
 
