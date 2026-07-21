@@ -64,19 +64,37 @@ export default function LoginForm() {
   const { toggleTheme } = useTheme();
   const router = useRouter();
 
+  // const mutation = useMutation<LoginResponse, Error, LoginPayload>({
+  //   mutationFn: loginUser,
+  //   onSuccess: (data) => {
+  //     if (data.success) {
+  //       const decoded = jwtDecode(data.data.accessToken);
+  //       console.log(decoded);
+
+  //       toast.success("Welcome back!");
+  //       router.push("/");
+  //     }
+  //   },
+  //   onError: (error) => {
+  //     toast.error(error.message || "Error: Invalid credentials");
+  //   },
+  // });
+
   const mutation = useMutation<LoginResponse, Error, LoginPayload>({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      if (data.success) {
+      if (data.success && data.data) {
         const decoded = jwtDecode(data.data.accessToken);
         console.log(decoded);
 
         toast.success("Welcome back!");
         router.push("/");
+      } else {
+        toast.error(data.message || "Error: Invalid credentials");
       }
     },
     onError: (error) => {
-      toast.error(error.message || "Error: Invalid credentials");
+      toast.error(error.message || "An unexpected error occurred");
     },
   });
 
